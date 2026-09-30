@@ -1,6 +1,8 @@
 @layer elven.components {
   .calendar {
     --_cell: 2.125rem;
+    /* Columns can be wider than rows are tall, for Roman numerals. */
+    --_column: var(--_cell);
     --_ruling: rgb(90 55 25 / 0.2);
     --_wash: rgb(110 70 25 / 0.14);
 
@@ -117,7 +119,7 @@
   }
 
   .grid th {
-    inline-size: var(--_cell);
+    inline-size: var(--_column);
     padding: 0 0 var(--elven-space-1);
     border-block-end: 1.5px solid rgb(90 55 25 / 0.55);
     color: var(--elven-color-rubric);
@@ -128,7 +130,7 @@
   }
 
   .grid td {
-    inline-size: var(--_cell);
+    inline-size: var(--_column);
     block-size: var(--_cell);
     padding: 0;
     border-block-end: 1px solid var(--_ruling);
@@ -136,13 +138,22 @@
     text-align: center;
   }
 
+  /*
+   * Roman numerals run up to seven letters (XXVIII), so the columns widen and
+   * the letters shrink and close up a little to keep each day in its cell.
+   */
+  .calendar[data-numerals='roman'] {
+    --_column: 3.25rem;
+  }
+
   .calendar[data-numerals='roman'] .grid td {
     font-size: var(--elven-font-size-xs);
+    letter-spacing: -0.02em;
   }
 
   /* The pages of months and of years: a dozen tiles, as tall and wide as the month. */
   .body {
-    inline-size: calc(var(--_cell) * 7);
+    inline-size: calc(var(--_column) * 7);
   }
 
   .tiles {
