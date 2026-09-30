@@ -72,6 +72,16 @@
     --elven-bark-600: #6a4428;
     --elven-bark-900: #3b2414;
 
+    /* Old vellum, iron-gall ink, rubric red and sealing wax: a manuscript page */
+    --elven-vellum-100: #efddb0;
+    --elven-vellum-300: #e2cb96;
+    --elven-vellum-500: #c9a968;
+    --elven-gall-900: #3b2a1a;
+    --elven-rubric-700: #8e2a1e;
+    --elven-wax-100: #f6d9c4;
+    --elven-wax-400: #c5503f;
+    --elven-wax-700: #8e2419;
+
     /* Status */
     --elven-blood-700: #962b24;
     --elven-blood-800: #7d231d;

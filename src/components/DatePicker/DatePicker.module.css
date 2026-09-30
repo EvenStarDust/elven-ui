@@ -1,0 +1,299 @@
+@layer elven.components {
+  .calendar {
+    --_cell: 2.125rem;
+    /* Columns can be wider than rows are tall, for Roman numerals. */
+    --_column: var(--_cell);
+    --_ruling: rgb(90 55 25 / 0.2);
+    --_wash: rgb(110 70 25 / 0.14);
+
+    color: var(--elven-color-vellum-ink);
+    font-family: var(--elven-font-manuscript);
+  }
+
+  .calendar button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .calendar button:focus-visible {
+    outline: var(--elven-focus-width) solid var(--elven-color-vellum-ink);
+    outline-offset: 1px;
+  }
+
+  .visuallyHidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Header: an illuminated initial, the month in script, the year in rubric. */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: var(--elven-space-2);
+    margin-block-end: var(--elven-space-3);
+  }
+
+  .initial {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: 2.375rem;
+    block-size: 2.375rem;
+    border-radius: var(--elven-radius-sm);
+    background: radial-gradient(circle at 35% 30%, var(--elven-color-wax-light), var(--elven-color-wax));
+    /* A band of gold leaf around the initial, with a dark keyline. */
+    box-shadow:
+      0 0 0 2px var(--elven-color-ornament),
+      0 0 0 3px var(--elven-color-ornament-shade),
+      inset 0 0 6px rgb(0 0 0 / 0.4);
+    color: var(--elven-color-ornament-gleam);
+    font-family: var(--elven-font-script);
+    font-size: var(--elven-font-size-xl);
+    line-height: 1;
+  }
+
+  /* The month (or the year) is a button that turns to the page where it can be chosen. */
+  .title {
+    flex: 1;
+    min-block-size: 2.375rem;
+    align-content: center;
+    font-family: var(--elven-font-script);
+    font-size: var(--elven-font-size-lg);
+    line-height: 1;
+    text-align: start;
+  }
+
+  .calendar button.title {
+    display: grid;
+    padding-inline: var(--elven-space-1);
+    border-radius: var(--elven-radius-sm);
+    font-family: var(--elven-font-script);
+    font-size: var(--elven-font-size-lg);
+    text-align: start;
+  }
+
+  .calendar button.title:hover {
+    background: var(--_wash);
+  }
+
+  .caret {
+    margin-inline-start: var(--elven-space-1);
+    font-size: 0.7em;
+  }
+
+  .year {
+    display: block;
+    margin-block-start: var(--elven-space-1);
+    color: var(--elven-color-rubric);
+    font-family: var(--elven-font-manuscript);
+    font-size: var(--elven-font-size-md);
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.12em;
+  }
+
+  .nav {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border-radius: var(--elven-radius-full);
+    font-size: var(--elven-font-size-md);
+  }
+
+  .calendar .nav:hover {
+    background: var(--_wash);
+  }
+
+  /* The month, ruled like a manuscript page. */
+  .grid {
+    border-collapse: collapse;
+  }
+
+  .grid th {
+    inline-size: var(--_column);
+    padding: 0 0 var(--elven-space-1);
+    border-block-end: 1.5px solid rgb(90 55 25 / 0.55);
+    color: var(--elven-color-rubric);
+    font-size: var(--elven-font-size-sm);
+    font-variant-caps: all-small-caps;
+    font-weight: var(--elven-font-weight-regular);
+    text-align: center;
+  }
+
+  .grid td {
+    inline-size: var(--_column);
+    block-size: var(--_cell);
+    padding: 0;
+    border-block-end: 1px solid var(--_ruling);
+    font-size: var(--elven-font-size-md);
+    text-align: center;
+  }
+
+  /*
+   * Roman numerals run up to seven letters (XXVIII), so the columns widen and
+   * the letters shrink and close up a little to keep each day in its cell.
+   */
+  .calendar[data-numerals='roman'] {
+    --_column: 3.25rem;
+  }
+
+  .calendar[data-numerals='roman'] .grid td {
+    font-size: var(--elven-font-size-xs);
+    letter-spacing: -0.02em;
+  }
+
+  /* The pages of months and of years: a dozen tiles, as tall and wide as the month. */
+  .body {
+    inline-size: calc(var(--_column) * 7);
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    block-size: calc(var(--_cell) * 6 + 1.75rem);
+    border-block-start: 1.5px solid rgb(90 55 25 / 0.55);
+  }
+
+  .calendar .tile {
+    position: relative;
+    z-index: 0;
+    display: grid;
+    place-items: center;
+    border-block-end: 1px solid var(--_ruling);
+    font-size: var(--elven-font-size-lg);
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.04em;
+  }
+
+  .calendar[data-numerals='roman'] .tile {
+    font-size: var(--elven-font-size-sm);
+  }
+
+  .calendar .tile:hover:not(:disabled, [data-selected]) {
+    background: var(--_wash);
+  }
+
+  .calendar .tile:disabled {
+    opacity: 0.4;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  /* Days of the neighbouring months: faint and not part of this page. */
+  .outside {
+    opacity: 0.4;
+  }
+
+  .calendar .day {
+    position: relative;
+    z-index: 0;
+    display: grid;
+    place-items: center;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .calendar .day:hover:not(:disabled, [data-selected]) {
+    background: var(--_wash);
+  }
+
+  /* Red-letter days: Sundays are written in rubric, as in medieval calendars. */
+  .day[data-sunday] {
+    color: var(--elven-color-rubric);
+  }
+
+  .calendar .day:disabled {
+    opacity: 0.4;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  /* Today: circled in ink by a slightly unsteady hand. */
+  /* Tiles are wider than days, so their ring and seal sit further in. */
+  .calendar .tile[aria-current='date']:not([data-selected])::before {
+    inset: 0.625rem 0.75rem;
+  }
+
+  :is(.day, .tile)[aria-current='date']:not([data-selected])::before {
+    content: '';
+    position: absolute;
+    inset: 3px 2px;
+    border: 1.6px solid currentColor;
+    border-radius: 48% 52% 46% 54% / 55% 45% 56% 44%;
+    rotate: -8deg;
+    opacity: 0.85;
+  }
+
+  /* The chosen day: a seal of red wax pressed over it. */
+  :is(.day, .tile)[data-selected] {
+    color: var(--elven-color-on-wax);
+    font-weight: 600;
+    text-shadow: 0 1px 0 rgb(0 0 0 / 0.45);
+  }
+
+  .calendar .tile[data-selected]::after {
+    inset: 0.5rem 0.625rem;
+  }
+
+  :is(.day, .tile)[data-selected]::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    z-index: -1;
+    border-radius: 47% 53% 50% 50% / 52% 46% 54% 48%;
+    background: radial-gradient(circle at 36% 30%, var(--elven-color-wax-light), var(--elven-color-wax) 58%);
+    box-shadow:
+      0 2px 3px rgb(0 0 0 / 0.45),
+      inset 0 0 0 2.5px rgb(255 200 180 / 0.16),
+      inset 0 -2px 3px rgb(0 0 0 / 0.3);
+  }
+
+  .ornament {
+    --elven-icon-accent: currentColor;
+
+    display: grid;
+    place-items: center;
+    margin-block: var(--elven-space-2) var(--elven-space-1);
+    color: var(--elven-color-rubric);
+    font-size: var(--elven-font-size-sm);
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .calendar .link {
+    padding: 0 var(--elven-space-1);
+    border-block-end: 1px solid transparent;
+    font-size: var(--elven-font-size-md);
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.06em;
+  }
+
+  .calendar .link:hover:not(:disabled) {
+    border-block-end-color: currentColor;
+    color: var(--elven-color-rubric);
+  }
+
+  .calendar .link:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    :is(.day, .tile)[data-selected] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+  }
+}

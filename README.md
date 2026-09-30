@@ -61,6 +61,42 @@ The library loads no fonts. It is designed for
 
 Every animation respects `prefers-reduced-motion`.
 
+## Input
+
+A text field written on a ruled line, with its label, hint and error built
+in. On focus the line turns to gold and a light runs along it.
+
+```tsx
+<Input label="Your name" hint="As written in the Red Book" />
+<Input label="Your name" frame="box" error="The doors stay shut" />
+<Input label="Secret word" type="password" />
+<Input label="Search" type="search" startIcon={<SeeingStoneIcon />} />
+<Input label="Rings" type="number" min={0} max={20} />
+```
+
+Every native `type` works. `password` gets a show/hide button, `search` a
+clear button and `number` decrease/increase buttons; `controls={false}` turns
+them off. `className` and `style` go on the wrapper, everything else on the
+`<input>`.
+
+## DatePicker and TimePicker
+
+The browser's own date and time pickers cannot be themed, so these unroll
+their own: a page of a medieval calendar on a scroll of parchment.
+
+```tsx
+<DatePicker label="Day of the council" defaultValue="2026-09-30" />
+<DatePicker label="Day" min="2026-09-10" max="2026-10-05" numerals="roman" />
+<TimePicker label="Hour of departure" defaultValue="09:30" minuteStep={15} />
+```
+
+Values are strings like the native inputs' (`YYYY-MM-DD`, `HH:MM`), reported
+through `onValueChange` and submitted with forms under `name`. Click the month
+to choose among months and years. Arrow keys move between days, Page Up and
+Page Down between months. Everything is English by default; pass `locale` and
+`labels` together to localise. For the manuscript look, load Uncial Antiqua
+and IM Fell English alongside Cormorant Garamond.
+
 ## Icons
 
 A set of 55 icons in the same old-world style: thin outlines that take the

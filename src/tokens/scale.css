@@ -25,6 +25,12 @@
      * Garamond when the consumer provides it and falls back to system serifs.
      */
     --elven-font-display: 'Cormorant Garamond', 'Cormorant', Garamond, 'Times New Roman', serif;
+    /*
+     * Manuscript pages (the date and time pickers): an uncial script for
+     * titles and an old book face for the text, when the consumer provides them.
+     */
+    --elven-font-script: 'Uncial Antiqua', 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+    --elven-font-manuscript: 'IM Fell English', 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
     --elven-font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     --elven-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
