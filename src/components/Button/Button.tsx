@@ -1,6 +1,7 @@
 'use client'
 
 import { forwardRef, useImperativeHandle, useRef, type ComponentPropsWithoutRef } from 'react'
+import { Slot, Slottable } from '@radix-ui/react-slot'
 import { clsx } from 'clsx'
 import { useClickEffect, type ClickEffect } from './ClickEffect'
 import { useVine, type VineLeaves } from './Vine'
@@ -46,6 +47,13 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
    * @default 'ripple', or 'none' for the `vine` and `gate` frames, which already animate on hover
    */
   clickEffect?: ClickEffect
+  /**
+   * Render the single child element (such as a link) as the button, keeping
+   * the button's styles, frames and effects. The child keeps its own props.
+   * @default false
+   * @example <Button asChild><a href="/rivendell">Enter Imladris</a></Button>
+   */
+  asChild?: boolean
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -55,6 +63,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     frame = 'scooped',
     vineLeaves = 'mixed',
     clickEffect,
+    asChild = false,
     // Native buttons default to type="submit", which silently submits enclosing forms.
     type = 'button',
     className,
@@ -77,10 +86,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const hasHoverEffect = frame === 'vine' || frame === 'gate'
   const effect = useClickEffect(buttonRef, clickEffect ?? (hasHoverEffect ? 'none' : 'ripple'))
 
+  const Root = asChild ? Slot : 'button'
+
   return (
-    <button
+    <Root
       ref={buttonRef}
-      type={type}
+      // type only means something on a <button>; a slotted link must not get it.
+      type={asChild ? undefined : type}
       data-variant={variant}
       data-size={size}
       data-frame={frame}
@@ -121,11 +133,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       <span className={styles.frame} aria-hidden="true" />
       {vine.element}
       {effect.bursts}
-      <span className={styles.label}>
-        {children}
-        {effect.signature}
-      </span>
-    </button>
+      {/* With asChild, the slotted element becomes the root and its own children go in the label. */}
+      <Slottable child={children}>
+        {(content) => (
+          <span className={styles.label}>
+            {content}
+            {effect.signature}
+          </span>
+        )}
+      </Slottable>
+    </Root>
   )
 })
 

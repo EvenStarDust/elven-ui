@@ -269,4 +269,65 @@ describe('Button', () => {
       expect(onClick).toHaveBeenCalledOnce()
     })
   })
+
+  describe('asChild', () => {
+    it('renders the child element with the button styles and state', () => {
+      render(
+        <Button asChild variant="secondary" size="lg">
+          <a href="/rivendell">Enter Imladris</a>
+        </Button>,
+      )
+      const link = screen.getByRole('link', { name: 'Enter Imladris' })
+      expect(link).toHaveAttribute('href', '/rivendell')
+      expect(link).toHaveClass('button')
+      expect(link).toHaveAttribute('data-variant', 'secondary')
+      expect(link).toHaveAttribute('data-size', 'lg')
+      expect(screen.queryByRole('button')).toBeNull()
+    })
+
+    it('does not put a button type on the child', () => {
+      render(
+        <Button asChild>
+          <a href="/rivendell">Enter</a>
+        </Button>,
+      )
+      expect(screen.getByRole('link')).not.toHaveAttribute('type')
+    })
+
+    it("wraps the child's content in the label", () => {
+      render(
+        <Button asChild>
+          <a href="/rivendell">Enter</a>
+        </Button>,
+      )
+      expect(screen.getByText('Enter')).toHaveClass('label')
+    })
+
+    it('forwards its ref to the child element', () => {
+      const ref = createRef<HTMLButtonElement>()
+      render(
+        <Button asChild ref={ref}>
+          <a href="/rivendell">Enter</a>
+        </Button>,
+      )
+      expect(ref.current).toBe(screen.getByRole('link'))
+    })
+
+    it("merges the child's own className and handlers", async () => {
+      const user = userEvent.setup()
+      const onClick = vi.fn((event: MouseEvent) => event.preventDefault())
+      render(
+        <Button asChild>
+          <a href="/rivendell" className="own" onClick={(event) => onClick(event.nativeEvent)}>
+            Enter
+          </a>
+        </Button>,
+      )
+      const link = screen.getByRole('link')
+      expect(link).toHaveClass('own')
+      expect(link).toHaveClass('button')
+      await user.click(link)
+      expect(onClick).toHaveBeenCalledOnce()
+    })
+  })
 })

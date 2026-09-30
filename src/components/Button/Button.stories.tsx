@@ -171,6 +171,20 @@ export const PointedSizes: Story = {
   render: Sizes.render,
 }
 
+/** With `asChild`, a link (or any element) takes on the button's look, frames and effects. */
+export const AsLink: Story = {
+  render: (args) => (
+    <div style={row}>
+      <Button {...args} asChild>
+        <a href="#rivendell">Enter Imladris</a>
+      </Button>
+      <Button {...args} asChild variant="secondary" frame="pointed">
+        <a href="#lorien">Walk to Lórien</a>
+      </Button>
+    </div>
+  ),
+}
+
 export const Disabled: Story = {
   render: (args) => (
     <div style={row}>
