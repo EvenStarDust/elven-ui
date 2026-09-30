@@ -6,5 +6,6 @@ import './themes/rivendell.css'
 import './themes/lothlorien.css'
 import './themes/mirkwood.css'
 
-// Public API. Components are exported from here.
-export {}
+// Public API. Every export is listed explicitly.
+export { Button } from './components/Button'
+export type { ButtonFrame, ButtonProps, ButtonSize, ButtonVariant, ClickEffect, VineLeaves } from './components/Button'
