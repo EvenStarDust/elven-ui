@@ -1,0 +1,29 @@
+/*
+ * Mirkwood: dark theme. A Wood-elf feast deep in the forest:
+ * ink black, bone-colored text, firelight amber.
+ */
+@layer elven.themes {
+  [data-elven-theme='mirkwood'] {
+    --elven-color-bg: var(--elven-ink-950);
+    --elven-color-surface: var(--elven-ink-900);
+    --elven-color-border: var(--elven-ink-700);
+    --elven-color-ornament: var(--elven-gilt-500);
+    --elven-color-ornament-highlight: var(--elven-gilt-300);
+    --elven-color-ornament-shade: var(--elven-gilt-700);
+    --elven-color-text: var(--elven-bone-100);
+    --elven-color-text-muted: var(--elven-bone-400);
+    --elven-color-accent: var(--elven-amber-500);
+    --elven-color-accent-hover: var(--elven-amber-400);
+    --elven-color-on-accent: var(--elven-burnt-900);
+    --elven-color-accent-text: var(--elven-amber-300);
+    --elven-color-focus: var(--elven-verdigris-300);
+    --elven-color-danger: var(--elven-ember-400);
+    --elven-color-on-danger: var(--elven-oxblood-950);
+    --elven-color-success: var(--elven-moss-300);
+    --elven-color-on-success: var(--elven-moss-950);
+
+    color-scheme: dark;
+    color: var(--elven-color-text);
+    background-color: var(--elven-color-bg);
+  }
+}

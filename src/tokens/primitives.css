@@ -1,0 +1,67 @@
+/*
+ * Primitive color palette, named after materials rather than hues so the
+ * palette reads like an old film still: parchment, sepia ink, rust, gilt.
+ *
+ * Only theme files may reference these. Components use semantic tokens.
+ */
+@layer elven.tokens {
+  :root {
+    /* Parchment and sepia ink (Rivendell) */
+    --elven-parchment-50: #f5efe3;
+    --elven-parchment-100: #ede5d5;
+    --elven-parchment-300: #d3c6ac;
+    --elven-sepia-700: #625547;
+    --elven-sepia-900: #2d251b;
+
+    /* Weathered rust */
+    --elven-rust-600: #86472b;
+    --elven-rust-700: #6f3a22;
+    --elven-rust-800: #5e2f1b;
+
+    /* Gold leaf and umber (Lothlórien) */
+    --elven-gold-50: #f3e9d0;
+    --elven-gold-100: #eaddbf;
+    --elven-gold-300: #c9b283;
+    --elven-gold-400: #c89e40;
+    --elven-gold-500: #b38a2e;
+    --elven-gold-800: #7a5a14;
+    --elven-umber-700: #5a4a2b;
+    --elven-umber-900: #2b210f;
+    --elven-umber-950: #1f170a;
+
+    /* Gold leaf for ornaments: shade, base and the highlight of the sheen */
+    --elven-gilt-300: #e6c570;
+    --elven-gilt-500: #c09a45;
+    --elven-gilt-700: #8c6b26;
+
+    /* Ink and bone (Mirkwood) */
+    --elven-ink-700: #3a3129;
+    --elven-ink-900: #1e1914;
+    --elven-ink-950: #14110e;
+    --elven-bone-100: #e0d7c4;
+    --elven-bone-400: #a19683;
+
+    /* Firelight amber */
+    --elven-amber-300: #e6b97f;
+    --elven-amber-400: #d9a061;
+    --elven-amber-500: #c88d48;
+
+    /* Text on colored fills: candlelight, ash, pale sage and their dark twins */
+    --elven-candle-200: #f4ddb2;
+    --elven-ash-200: #d6d3cb;
+    --elven-sage-100: #e1ead2;
+    --elven-burnt-900: #301c06;
+    --elven-oxblood-950: #2a0e0b;
+    --elven-moss-950: #131f10;
+
+    /* Verdigris, the green patina of old copper, for focus rings */
+    --elven-verdigris-300: #82bdb5;
+    --elven-verdigris-700: #2e6b66;
+
+    /* Status */
+    --elven-blood-700: #962b24;
+    --elven-ember-400: #db7862;
+    --elven-moss-300: #a3b58e;
+    --elven-moss-700: #4e6636;
+  }
+}
