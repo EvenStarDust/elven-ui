@@ -1,0 +1,35 @@
+/*
+ * Rivendell: light theme. Late autumn in the Last Homely House:
+ * warm ivory parchment, sepia ink, weathered rust.
+ *
+ * Also the default: its values apply at :root so components render
+ * correctly without any theme attribute.
+ */
+@layer elven.themes {
+  :root,
+  [data-elven-theme='rivendell'] {
+    --elven-color-bg: var(--elven-parchment-100);
+    --elven-color-surface: var(--elven-parchment-50);
+    --elven-color-border: var(--elven-parchment-300);
+    --elven-color-ornament: var(--elven-gilt-500);
+    --elven-color-ornament-highlight: var(--elven-gilt-300);
+    --elven-color-ornament-shade: var(--elven-gilt-700);
+    --elven-color-text: var(--elven-sepia-900);
+    --elven-color-text-muted: var(--elven-sepia-700);
+    --elven-color-accent: var(--elven-rust-600);
+    --elven-color-accent-hover: var(--elven-rust-700);
+    --elven-color-on-accent: var(--elven-candle-200);
+    --elven-color-accent-text: var(--elven-rust-800);
+    --elven-color-focus: var(--elven-verdigris-700);
+    --elven-color-danger: var(--elven-blood-700);
+    --elven-color-on-danger: var(--elven-ash-200);
+    --elven-color-success: var(--elven-moss-700);
+    --elven-color-on-success: var(--elven-sage-100);
+  }
+
+  [data-elven-theme='rivendell'] {
+    color-scheme: light;
+    color: var(--elven-color-text);
+    background-color: var(--elven-color-bg);
+  }
+}

@@ -1,0 +1,34 @@
+/*
+ * Lothlórien: warm gold theme. Sunlight through mallorn leaves:
+ * sunlit parchment, gold leaf, deep umber.
+ *
+ * The gold accent is too light for text on the surface, so it is only
+ * used as a fill with dark text. Accent-colored text uses a deeper gold,
+ * and hover lightens the fill instead of darkening it to keep that dark
+ * text readable.
+ */
+@layer elven.themes {
+  [data-elven-theme='lothlorien'] {
+    --elven-color-bg: var(--elven-gold-100);
+    --elven-color-surface: var(--elven-gold-50);
+    --elven-color-border: var(--elven-gold-300);
+    --elven-color-ornament: var(--elven-gilt-500);
+    --elven-color-ornament-highlight: var(--elven-gilt-300);
+    --elven-color-ornament-shade: var(--elven-gilt-700);
+    --elven-color-text: var(--elven-umber-900);
+    --elven-color-text-muted: var(--elven-umber-700);
+    --elven-color-accent: var(--elven-gold-500);
+    --elven-color-accent-hover: var(--elven-gold-400);
+    --elven-color-on-accent: var(--elven-umber-950);
+    --elven-color-accent-text: var(--elven-gold-800);
+    --elven-color-focus: var(--elven-verdigris-700);
+    --elven-color-danger: var(--elven-blood-700);
+    --elven-color-on-danger: var(--elven-ash-200);
+    --elven-color-success: var(--elven-moss-700);
+    --elven-color-on-success: var(--elven-sage-100);
+
+    color-scheme: light;
+    color: var(--elven-color-text);
+    background-color: var(--elven-color-bg);
+  }
+}

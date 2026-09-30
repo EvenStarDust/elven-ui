@@ -1,0 +1,6 @@
+/*
+ * Declares the cascade layer order once, before any other library CSS.
+ * Unlayered consumer styles always beat everything in `elven`.
+ * See docs/adr/0001-css-layers.md.
+ */
+@layer elven.tokens, elven.themes, elven.components;

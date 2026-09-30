@@ -123,9 +123,16 @@ src/index.ts      the single public entry point
 
 - Never hardcode a color, space, radius, shadow, font or duration in a
   component. Every value comes from a CSS variable.
-- There are two layers of tokens. Primitive tokens (`--elven-gold-500`) are used
-  only inside theme files. Semantic tokens (`--elven-color-surface`,
-  `--elven-color-accent`) are what components use.
+- There are two layers of color tokens. Primitive tokens (`--elven-gold-500`,
+  in `src/tokens/primitives.css`) are used only inside theme files. Semantic
+  tokens (`--elven-color-surface`, `--elven-color-accent`) are what components
+  use.
+- Theme-independent scales (spacing, radius, type, motion, ornament, in
+  `src/tokens/scale.css`) may be used directly by components.
+- When adding a semantic color, add it to all three themes and to the contrast
+  pairs in `src/themes/themes.test.ts`. That test enforces WCAG AA.
+- Decorative ornaments must be controlled by a token so they can be turned off
+  (`--elven-ornament-width: 0`).
 - A theme is applied with `data-elven-theme="rivendell|lothlorien|mirkwood"` on
   any element, and themes can be nested. Switching themes must not need any JS.
 - Every text/background pair has to meet WCAG AA contrast in every theme.
