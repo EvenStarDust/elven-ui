@@ -228,6 +228,15 @@ describe('DatePicker', () => {
     expect(screen.getByRole('textbox')).not.toHaveAttribute('name')
   })
 
+  it('opens clear of the label, hint and error of its field', async () => {
+    // The popover is anchored to the whole field, so its own text stays readable while choosing.
+    const { container } = render(<DatePicker label="Council" hint="In autumn" error="Too late" />)
+    const field = container.firstElementChild as HTMLElement
+    const measure = vi.spyOn(field, 'getBoundingClientRect')
+    await open()
+    expect(measure).toHaveBeenCalled()
+  })
+
   it('cannot be opened when disabled', async () => {
     const user = userEvent.setup()
     render(<DatePicker label="Council" locale="en-GB" disabled />)

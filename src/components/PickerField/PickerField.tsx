@@ -43,13 +43,13 @@ export const PickerField = forwardRef<HTMLInputElement, PickerFieldProps>(functi
   const inputRef = useRef<HTMLInputElement>(null)
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement)
   const dialogRef = useRef<HTMLDivElement>(null)
-  // The popover is placed against the whole field (the line or box), not just the text inside it.
+  // The popover is placed against the whole field, label, hint and error included, so it never covers them.
   const anchorRef = useRef<HTMLElement | null>(null)
 
   // The popover is rendered at the end of <body>, outside any themed ancestor, so it takes the field's theme along.
   const [theme, setTheme] = useState<string>()
   const change = (next: boolean) => {
-    if (next) anchorRef.current = inputRef.current?.parentElement ?? null
+    if (next) anchorRef.current = inputRef.current?.parentElement?.parentElement ?? null
     if (next) setTheme(inputRef.current?.closest('[data-elven-theme]')?.getAttribute('data-elven-theme') ?? undefined)
     onOpenChange(next)
   }
