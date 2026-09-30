@@ -1,0 +1,31 @@
+@layer elven.components {
+  .icon {
+    flex: none;
+    overflow: visible;
+    /* Sits on the text baseline like a letter would. */
+    vertical-align: -0.15em;
+  }
+
+  .line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--elven-icon-stroke-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /*
+   * One gold detail per icon. Set --elven-icon-accent on any ancestor to
+   * change it, for example to currentColor on a filled background.
+   */
+  .accent {
+    fill: var(--elven-icon-accent, var(--elven-color-icon-accent));
+    fill-rule: evenodd;
+  }
+
+  @media (forced-colors: active) {
+    .accent {
+      fill: currentColor;
+    }
+  }
+}
