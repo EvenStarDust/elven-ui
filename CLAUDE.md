@@ -143,6 +143,10 @@ src/index.ts      the single public entry point
 - Scope stays small. Only the 8 planned components (Button, Input, Card, Badge,
   Stack, Toggle, Dialog, Tooltip) are in scope until `0.1.0`. Don't add new
   components or props unless you're asked.
+- Added on request, outside the 8: `DatePicker` and `TimePicker` (see
+  `docs/adr/0004-themed-date-and-time-pickers.md`), with the internal
+  `Parchment` and `PickerField` they share. Internal components are not
+  exported from `src/index.ts`.
 - Each component lives in its own folder:
   `src/components/Button/{Button.tsx, Button.module.css, Button.test.tsx, Button.stories.tsx, index.ts}`.
   It is exported from `src/index.ts`.
@@ -156,7 +160,7 @@ src/index.ts      the single public entry point
   Tooltip, and Toggle if it helps). Don't rebuild focus traps or portals by
   hand.
 - Don't add runtime dependencies unless the reason is written down. `clsx` and
-  Radix are the only ones planned.
+  Radix are the only ones planned (so far `react-slot` and `react-popover`).
 
 ### Naming and code conventions
 
