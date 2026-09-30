@@ -61,6 +61,22 @@ The library loads no fonts. It is designed for
 
 Every animation respects `prefers-reduced-motion`.
 
+## Icons
+
+A set of 23 icons in the same old-world style: thin outlines that take the
+text color, each with one gold detail from the theme.
+
+```tsx
+import { QuillIcon, CloseIcon } from '@evenstardust/elven-ui'
+
+<Button><QuillIcon /> Sign the letter</Button>
+<Button variant="ghost" aria-label="Close"><CloseIcon /></Button>
+<QuillIcon size={32} aria-label="Write a letter" />
+```
+
+Icons are `1em` by default and decorative (`aria-hidden`). Give an icon an
+`aria-label` when it stands on its own. Unused icons are tree-shaken away.
+
 ## Development
 
 ```bash

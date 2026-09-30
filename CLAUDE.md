@@ -61,6 +61,7 @@ src/tokens/       primitive values (color scales, spacing, radius, motion)
 src/themes/       rivendell / lothlorien / mirkwood: map primitives → semantic tokens
 src/utils/        internal helpers, never exported
 src/hooks/        internal hooks, never exported
+src/icons/        the icon set; uses tokens only
 src/components/   use semantic tokens + utils/hooks only
 src/index.ts      the single public entry point
 ```
@@ -166,6 +167,18 @@ src/index.ts      the single public entry point
 - Every public prop has a JSDoc comment. Storybook turns these into the docs
   table, including `@default`.
 - Comments explain *why*, not *what*. Don't comment obvious code.
+
+## Icons
+
+- The icon set in `src/icons` was added on request, outside the 8 components.
+- Every icon is drawn on a 24 grid as a thin outline (`currentColor`, width from
+  `--elven-icon-stroke-width`) with at most one filled gold accent
+  (`--elven-color-icon-accent`). Keep new icons in that style.
+- Shapes are constructed from circles, rectangles and lens shapes, not drawn
+  point by point. Show the owner a preview before adding or changing an icon.
+- Icons are decorative by default (`aria-hidden`); with an `aria-label` they
+  become images. Names are plain and end in `Icon` (`QuillIcon`, not `Feather`).
+- Every icon is a named, tree-shakable export listed in `src/index.ts`.
 
 ## Styling
 
