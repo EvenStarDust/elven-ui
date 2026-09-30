@@ -9,6 +9,12 @@ import './themes/mirkwood.css'
 // Public API. Every export is listed explicitly.
 export { Button } from './components/Button'
 export type { ButtonFrame, ButtonProps, ButtonSize, ButtonVariant, ClickEffect, VineLeaves } from './components/Button'
+export { DatePicker } from './components/DatePicker'
+export type { DatePickerLabels, DatePickerProps, Numerals, WeekStart } from './components/DatePicker'
+export { Input } from './components/Input'
+export type { InputFrame, InputProps, InputSize } from './components/Input'
+export { TimePicker } from './components/TimePicker'
+export type { TimePickerLabels, TimePickerProps } from './components/TimePicker'
 export type { IconProps } from './icons'
 export {
   ArrowDownIcon,

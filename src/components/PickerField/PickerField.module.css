@@ -1,0 +1,39 @@
+@layer elven.components {
+  /* Carries a theme attribute for its variables, but is only a transparent holder for the parchment. */
+  .popover {
+    z-index: 1000;
+    background-color: transparent;
+    outline: none;
+    transform-origin: var(--radix-popover-content-transform-origin);
+  }
+
+  .popover[data-state='open'] {
+    animation: picker-open var(--elven-duration-base) var(--elven-ease-dissolve);
+  }
+
+  /* Closing: the parchment rolls itself back up, then the rolls fade away. */
+  .popover[data-state='closed'] {
+    animation: picker-close calc(var(--elven-duration-slow) * 1.25) var(--elven-ease-dissolve);
+  }
+
+  @keyframes picker-open {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes picker-close {
+    0%,
+    80% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+}

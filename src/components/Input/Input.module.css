@@ -1,0 +1,267 @@
+@layer elven.components {
+  .field {
+    --_line: calc(var(--elven-ornament-width) * 1.5);
+    --_height: var(--elven-size-control-md);
+    --_font-size: var(--elven-font-size-md);
+
+    display: grid;
+    /* Packed at the top, so fields in one row line up even when only some have a hint. */
+    align-content: start;
+    gap: var(--elven-space-1);
+    color: var(--elven-color-text);
+  }
+
+  .field[data-size='sm'] {
+    --_height: var(--elven-size-control-sm);
+    --_font-size: var(--elven-font-size-sm);
+  }
+
+  .field[data-size='lg'] {
+    --_height: var(--elven-size-control-lg);
+    --_font-size: var(--elven-font-size-lg);
+  }
+
+  .label {
+    justify-self: start;
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-lg);
+    font-weight: var(--elven-font-weight-semibold);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--elven-letter-spacing-caps);
+    line-height: var(--elven-line-height-tight);
+  }
+
+  .field {
+    /* A short band of light that travels along the gilt line when the field gains focus. */
+    --_glint: linear-gradient(90deg, transparent, var(--elven-color-ornament-highlight), transparent);
+    /* With a band 40% wide, these positions put it just off the start and just off the end. */
+    --_glint-start: -67% 0;
+    --_glint-end: 167% 0;
+    --_glint-travel: calc(var(--elven-duration-slow) * 2.5);
+  }
+
+  .control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--elven-space-2);
+    min-block-size: var(--_height);
+  }
+
+  /*
+   * Line: the ruled line the text is written on. It is the field's only
+   * boundary, so it uses the muted text color, which meets 3:1 on every surface.
+   */
+  .field[data-frame='line'] .control {
+    border-block-end: var(--_line) solid var(--elven-color-text-muted);
+  }
+
+  /*
+   * On focus a gilt line is drawn over the ruled line, exactly where the
+   * border is, like ink following a quill, and the light runs along it to the
+   * end. The line itself uses the darker icon gold so the focus indicator
+   * keeps enough contrast.
+   */
+  .field[data-frame='line'] .control::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: calc(var(--_line) * -1);
+    block-size: calc(var(--_line) + 0.5px);
+    background: var(--_glint) var(--_glint-start) / 40% 100% no-repeat;
+    background-color: var(--elven-color-icon-accent);
+    scale: 0 1;
+    transform-origin: 0 50%;
+    transition: scale var(--elven-duration-slow) var(--elven-ease-dissolve);
+    pointer-events: none;
+  }
+
+  :global([dir='rtl']) .field[data-frame='line'] .control::after {
+    transform-origin: 100% 50%;
+  }
+
+  .field[data-frame='line'] .control:focus-within::after {
+    scale: 1 1;
+    background-position: var(--_glint-end);
+    transition:
+      scale var(--elven-duration-slow) var(--elven-ease-dissolve),
+      background-position var(--_glint-travel) var(--elven-ease-dissolve);
+  }
+
+  /*
+   * Box: a border on all four sides. The border is painted as a background on
+   * the border box, so the same travelling light can cross the whole frame.
+   * The background color shows through the transparent border as its color.
+   */
+  .field[data-frame='box'] .control {
+    padding-inline: var(--elven-space-3);
+    border: var(--_line) solid transparent;
+    border-radius: var(--elven-radius-xl);
+    background:
+      linear-gradient(var(--elven-color-surface), var(--elven-color-surface)) padding-box,
+      var(--_glint) var(--_glint-start) / 40% 100% no-repeat border-box;
+    background-color: var(--elven-color-text-muted);
+    transition: background-color var(--elven-duration-base) var(--elven-ease-dissolve);
+  }
+
+  .field[data-frame='box'] .control:focus-within {
+    background-color: var(--elven-color-icon-accent);
+    background-position:
+      0 0,
+      var(--_glint-end);
+    transition:
+      background-color var(--elven-duration-base) var(--elven-ease-dissolve),
+      background-position var(--_glint-travel) var(--elven-ease-dissolve);
+  }
+
+  .input {
+    flex: 1;
+    min-inline-size: 0;
+    padding: var(--elven-space-1) var(--elven-space-1);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font-family: var(--elven-font-body);
+    font-size: var(--_font-size);
+    line-height: var(--elven-line-height-normal);
+    /* The gilt line is the focus indicator. */
+    outline: none;
+  }
+
+  /* Browsers paint autofilled fields in their own colors; keep the theme's instead. */
+  .input:-webkit-autofill,
+  .input:autofill {
+    -webkit-text-fill-color: var(--elven-color-text);
+    caret-color: var(--elven-color-text);
+    transition: background-color 99999s ease-out;
+  }
+
+  /* Where the field draws its own controls, hide the browser's. */
+  .field[data-controls='number'] .input {
+    appearance: textfield;
+  }
+
+  .field[data-controls='number'] .input::-webkit-inner-spin-button,
+  .field[data-controls='number'] .input::-webkit-outer-spin-button,
+  .field[data-controls='search'] .input::-webkit-search-cancel-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  .input::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  .input::placeholder {
+    color: var(--elven-color-text-muted);
+    opacity: 1;
+  }
+
+  .adornment {
+    display: inline-flex;
+    flex: none;
+    color: var(--elven-color-text-muted);
+    font-size: calc(var(--_font-size) * 1.25);
+  }
+
+  .actions {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .action,
+  .actions > button {
+    display: inline-flex;
+    flex: none;
+    padding: var(--elven-space-1);
+    border: 0;
+    border-radius: var(--elven-radius-lg);
+    background: transparent;
+    color: var(--elven-color-text-muted);
+    font-size: calc(var(--_font-size) * 1.25);
+    cursor: pointer;
+  }
+
+  .action:hover:not(:disabled),
+  .actions > button:hover:not(:disabled) {
+    color: var(--elven-color-text);
+  }
+
+  .action:focus-visible,
+  .actions > button:focus-visible {
+    outline: var(--elven-focus-width) solid var(--elven-color-focus);
+    outline-offset: var(--elven-focus-offset);
+  }
+
+  .stepper {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .action:disabled,
+  .actions > button:disabled {
+    cursor: not-allowed;
+  }
+
+  .hint,
+  .error {
+    margin: 0;
+    line-height: var(--elven-line-height-normal);
+  }
+
+  .hint {
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-md);
+    font-style: italic;
+    color: var(--elven-color-text-muted);
+  }
+
+  .error {
+    --elven-icon-accent: currentColor;
+
+    display: flex;
+    align-items: center;
+    gap: var(--elven-space-1);
+    font-family: var(--elven-font-body);
+    font-size: var(--elven-font-size-sm);
+    color: var(--elven-color-danger);
+  }
+
+  /* Invalid: the line or border, and its focus state, turn to the danger color. */
+  .field[data-invalid][data-frame='line'] .control {
+    border-block-end-color: var(--elven-color-danger);
+  }
+
+  .field[data-invalid][data-frame='line'] .control::after,
+  .field[data-invalid][data-frame='box'] .control {
+    background-color: var(--elven-color-danger);
+  }
+
+  .field[data-disabled] {
+    opacity: 0.5;
+  }
+
+  .field[data-disabled] .input {
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    .field[data-frame='line'] .control {
+      border-block-end-color: FieldText;
+    }
+
+    .field[data-frame='box'] .control {
+      border-color: FieldText;
+    }
+
+    .control::after {
+      display: none;
+    }
+
+    .control:focus-within {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
+}

@@ -1,0 +1,182 @@
+@layer elven.components {
+  .scroll {
+    --_roll: 1.125rem;
+    --_unroll: calc(var(--elven-duration-slow) * 1.75);
+
+    position: relative;
+    inline-size: max-content;
+    padding-inline: 0.625rem;
+    color: var(--elven-color-vellum-ink);
+    font-family: var(--elven-font-manuscript);
+    filter: drop-shadow(0 12px 14px rgb(0 0 0 / 0.45));
+  }
+
+  .defs {
+    position: absolute;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  /* The rolled ends, with a turned wooden finial on each side. */
+  .roll {
+    position: relative;
+    z-index: 2;
+    block-size: var(--_roll);
+    margin-inline: -0.625rem;
+    border-radius: calc(var(--_roll) / 2);
+    background: linear-gradient(
+      180deg,
+      var(--elven-color-bark-light),
+      var(--elven-color-vellum) 28%,
+      var(--elven-color-vellum-light) 44%,
+      var(--elven-color-vellum-shade) 72%,
+      var(--elven-color-bark-light)
+    );
+  }
+
+  .roll::before,
+  .roll::after {
+    content: '';
+    position: absolute;
+    inset-block: -0.1875rem;
+    inline-size: 0.5625rem;
+    border-radius: 0.25rem;
+    background: linear-gradient(180deg, var(--elven-color-bark), var(--elven-color-bark-light) 45%, var(--elven-color-bark));
+  }
+
+  .roll::before {
+    inset-inline-start: -0.4375rem;
+  }
+
+  .roll::after {
+    inset-inline-end: -0.4375rem;
+  }
+
+  /*
+   * The scroll keeps its full size from the start. Unrolling is drawn by two
+   * things moving in step: the page is revealed from the top down, and a
+   * curtain exactly as tall as the page slides down with the lower roll on its
+   * bottom edge. Both are a share of the same height, so the roll always sits
+   * on the edge of what is visible.
+   */
+  .sheet {
+    position: relative;
+    margin-block-start: -0.3125rem;
+    /* Room for the lower roll, which overlaps the page like the upper one. */
+    padding-block-end: calc(var(--_roll) - 0.3125rem);
+  }
+
+  .leaf {
+    position: relative;
+    animation: parchment-reveal var(--_unroll) var(--elven-ease-dissolve) both;
+  }
+
+  .curtain {
+    position: absolute;
+    inset-inline: 0;
+    inset-block: 0 calc(var(--_roll) - 0.3125rem);
+    pointer-events: none;
+    animation: parchment-roll-down var(--_unroll) var(--elven-ease-dissolve) both;
+  }
+
+  .curtain .roll {
+    position: absolute;
+    /* As wide as the upper roll, which reaches past the page on both sides. */
+    inset-inline: -0.625rem;
+    inset-block-start: calc(100% - 0.3125rem);
+    margin-inline: 0;
+  }
+
+  .scroll[data-state='closed'] .leaf {
+    animation: parchment-conceal var(--elven-duration-slow) var(--elven-ease-dissolve) both;
+  }
+
+  .scroll[data-state='closed'] .curtain {
+    animation: parchment-roll-up var(--elven-duration-slow) var(--elven-ease-dissolve) both;
+  }
+
+  /* The side insets are negative so the ragged edges are never cut off. */
+  @keyframes parchment-reveal {
+    from {
+      clip-path: inset(0 -1rem 100% -1rem);
+    }
+
+    to {
+      clip-path: inset(0 -1rem 0 -1rem);
+    }
+  }
+
+  @keyframes parchment-conceal {
+    from {
+      clip-path: inset(0 -1rem 0 -1rem);
+    }
+
+    to {
+      clip-path: inset(0 -1rem 100% -1rem);
+    }
+  }
+
+  @keyframes parchment-roll-down {
+    from {
+      transform: translateY(-100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes parchment-roll-up {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-100%);
+    }
+  }
+
+  /*
+   * The page itself, under the content so the ragged-edge filter doesn't blur
+   * the text. Layers: fine grain, large stains, and the vellum fading to a
+   * darker edge, then an inner shadow for the scorched rim.
+   */
+  .page {
+    position: absolute;
+    inset: -2px 3px;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .22 0 0 0 0 .08 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .28 0 0 0 0 .1 0 0 0 1.1 -.42'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E"),
+      radial-gradient(
+        ellipse at 50% 40%,
+        var(--elven-color-vellum-light),
+        var(--elven-color-vellum) 70%,
+        var(--elven-color-vellum-shade)
+      );
+    box-shadow:
+      inset 0 0 26px rgb(110 70 25 / 0.6),
+      inset 0 0 4px rgb(70 40 10 / 0.7);
+  }
+
+  .content {
+    position: relative;
+    padding: var(--elven-space-5) var(--elven-space-5) var(--elven-space-4);
+  }
+
+  @media (forced-colors: active) {
+    .scroll {
+      filter: none;
+    }
+
+    .page {
+      filter: none !important;
+      border: 1px solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+
+    .roll {
+      display: none;
+    }
+  }
+}
