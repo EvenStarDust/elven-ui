@@ -23,6 +23,14 @@
     --elven-color-leaf-shade: var(--elven-ivy-900);
     --elven-color-bark: var(--elven-bark-900);
     --elven-color-bark-light: var(--elven-bark-600);
+    --elven-color-vellum: var(--elven-vellum-300);
+    --elven-color-vellum-light: var(--elven-vellum-100);
+    --elven-color-vellum-shade: var(--elven-vellum-500);
+    --elven-color-vellum-ink: var(--elven-gall-900);
+    --elven-color-rubric: var(--elven-rubric-700);
+    --elven-color-wax: var(--elven-wax-700);
+    --elven-color-wax-light: var(--elven-wax-400);
+    --elven-color-on-wax: var(--elven-wax-100);
     --elven-color-text: var(--elven-umber-900);
     --elven-color-text-muted: var(--elven-umber-700);
     --elven-color-accent: var(--elven-gold-500);
