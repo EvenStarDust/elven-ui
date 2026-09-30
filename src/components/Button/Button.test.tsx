@@ -9,6 +9,15 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Enter Imladris' })).toBeInTheDocument()
   })
 
+  it('takes its name from aria-label when it only holds an icon', () => {
+    render(
+      <Button aria-label="Gather leaves">
+        <svg aria-hidden="true" />
+      </Button>,
+    )
+    expect(screen.getByRole('button', { name: 'Gather leaves' })).toBeInTheDocument()
+  })
+
   it('defaults to type="button" so it never submits a form by accident', () => {
     render(<Button>Save</Button>)
     expect(screen.getByRole('button')).toHaveAttribute('type', 'button')
@@ -136,6 +145,12 @@ describe('Button', () => {
       expect(button).toHaveAttribute('data-vine', 'bare')
     })
 
+    it('does not grow the vine on touch', () => {
+      const { container } = render(<Button frame="vine">Enter</Button>)
+      fireEvent.pointerEnter(screen.getByRole('button'), { pointerType: 'touch' })
+      expect(container.querySelector('svg')).toBeNull()
+    })
+
     it('does not change the accessible name', async () => {
       const user = userEvent.setup()
       render(<Button frame="vine">Enter</Button>)
@@ -261,6 +276,148 @@ describe('Button', () => {
       await user.click(screen.getByRole('button'))
       expect(onPointerDown).toHaveBeenCalledOnce()
       expect(onClick).toHaveBeenCalledOnce()
+    })
+  })
+
+  describe('asChild', () => {
+    it('renders the child element with the button styles and state', () => {
+      render(
+        <Button asChild variant="secondary" size="lg">
+          <a href="/rivendell">Enter Imladris</a>
+        </Button>,
+      )
+      const link = screen.getByRole('link', { name: 'Enter Imladris' })
+      expect(link).toHaveAttribute('href', '/rivendell')
+      expect(link).toHaveClass('button')
+      expect(link).toHaveAttribute('data-variant', 'secondary')
+      expect(link).toHaveAttribute('data-size', 'lg')
+      expect(screen.queryByRole('button')).toBeNull()
+    })
+
+    it('does not put a button type on the child', () => {
+      render(
+        <Button asChild>
+          <a href="/rivendell">Enter</a>
+        </Button>,
+      )
+      expect(screen.getByRole('link')).not.toHaveAttribute('type')
+    })
+
+    it("wraps the child's content in the label", () => {
+      render(
+        <Button asChild>
+          <a href="/rivendell">Enter</a>
+        </Button>,
+      )
+      expect(screen.getByText('Enter')).toHaveClass('label')
+    })
+
+    it('forwards its ref to the child element', () => {
+      const ref = createRef<HTMLButtonElement>()
+      render(
+        <Button asChild ref={ref}>
+          <a href="/rivendell">Enter</a>
+        </Button>,
+      )
+      expect(ref.current).toBe(screen.getByRole('link'))
+    })
+
+    it("merges the child's own className and handlers", async () => {
+      const user = userEvent.setup()
+      const onClick = vi.fn((event: MouseEvent) => event.preventDefault())
+      render(
+        <Button asChild>
+          <a href="/rivendell" className="own" onClick={(event) => onClick(event.nativeEvent)}>
+            Enter
+          </a>
+        </Button>,
+      )
+      const link = screen.getByRole('link')
+      expect(link).toHaveClass('own')
+      expect(link).toHaveClass('button')
+      await user.click(link)
+      expect(onClick).toHaveBeenCalledOnce()
+    })
+  })
+
+  describe('loading', () => {
+    it('marks the button busy and describes it as loading, keeping its name', () => {
+      render(<Button loading>Save</Button>)
+      const button = screen.getByRole('button', { name: 'Save' })
+      expect(button).toHaveAttribute('aria-busy', 'true')
+      expect(button).toHaveAttribute('aria-disabled', 'true')
+      expect(button).toHaveAccessibleDescription('Loading')
+    })
+
+    it('keeps a description passed in alongside the loading one', () => {
+      render(
+        <>
+          <p id="hint">Saves your draft</p>
+          <Button loading aria-describedby="hint">
+            Save
+          </Button>
+        </>,
+      )
+      expect(screen.getByRole('button')).toHaveAccessibleDescription('Saves your draft Loading')
+    })
+
+    it('uses a translated loading label', () => {
+      render(
+        <Button loading loadingLabel="Yükleniyor">
+          Kaydet
+        </Button>,
+      )
+      expect(screen.getByRole('button', { name: 'Kaydet' })).toHaveAccessibleDescription('Yükleniyor')
+    })
+
+    it('stays focusable but ignores clicks and keys', async () => {
+      const user = userEvent.setup()
+      const onClick = vi.fn()
+      render(
+        <Button loading onClick={onClick}>
+          Save
+        </Button>,
+      )
+      const button = screen.getByRole('button')
+
+      await user.tab()
+      expect(button).toHaveFocus()
+      await user.keyboard('{Enter}')
+      await user.click(button)
+      expect(onClick).not.toHaveBeenCalled()
+    })
+
+    it('does not submit a form while loading', async () => {
+      const user = userEvent.setup()
+      const onSubmit = vi.fn((event: SubmitEvent) => event.preventDefault())
+      render(
+        <form onSubmit={(event) => onSubmit(event.nativeEvent as SubmitEvent)}>
+          <Button type="submit" loading>
+            Save
+          </Button>
+        </form>,
+      )
+      await user.click(screen.getByRole('button'))
+      expect(onSubmit).not.toHaveBeenCalled()
+    })
+
+    it('plays no click effect while loading', () => {
+      const { container } = render(
+        <Button loading clickEffect="stardust">
+          Save
+        </Button>,
+      )
+      fireEvent.pointerDown(screen.getByRole('button'), { button: 0 })
+      expect(container.querySelectorAll('[data-burst]')).toHaveLength(0)
+    })
+
+    it('shows the button again once loading ends', () => {
+      const { rerender } = render(<Button loading>Save</Button>)
+      rerender(<Button>Save</Button>)
+      const button = screen.getByRole('button', { name: 'Save' })
+      expect(button).not.toHaveAttribute('aria-busy')
+      expect(button).not.toHaveAttribute('aria-disabled')
+      expect(button).not.toHaveAttribute('aria-describedby')
     })
   })
 })

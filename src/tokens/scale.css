@@ -65,6 +65,9 @@
     --elven-size-control-md: 2.5rem;
     --elven-size-control-lg: 3rem;
 
+    /* Icon outlines, in units of the 24 grid they are drawn on */
+    --elven-icon-stroke-width: 1.3;
+
     --elven-focus-width: 2px;
     --elven-focus-offset: 2px;
   }

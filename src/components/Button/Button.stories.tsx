@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
 import { fn } from 'storybook/test'
+import { ArrowRightIcon, CloseIcon, EvenstarIcon, QuillIcon } from '../../icons'
 import { Button } from './Button'
 
 const meta = {
@@ -169,6 +171,84 @@ export const Sizes: Story = {
 export const PointedSizes: Story = {
   args: { frame: 'pointed' },
   render: Sizes.render,
+}
+
+/** With `asChild`, a link (or any element) takes on the button's look, frames and effects. */
+export const AsLink: Story = {
+  render: (args) => (
+    <div style={row}>
+      <Button {...args} asChild>
+        <a href="#rivendell">Enter Imladris</a>
+      </Button>
+      <Button {...args} asChild variant="secondary" frame="pointed">
+        <a href="#lorien">Walk to Lórien</a>
+      </Button>
+    </div>
+  ),
+}
+
+/** A turning Evenstar replaces the label while work is in progress; the width stays the same. */
+export const Loading: Story = {
+  render: (args) => (
+    <div style={row}>
+      <Button {...args} loading>
+        Enter Imladris
+      </Button>
+      <Button {...args} loading variant="secondary">
+        Ask Elrond
+      </Button>
+      <Button {...args} loading variant="danger" frame="pointed">
+        Break the sword
+      </Button>
+    </div>
+  ),
+}
+
+function SaveButton(props: React.ComponentProps<typeof Button>) {
+  const [loading, setLoading] = useState(false)
+  return (
+    <Button
+      {...props}
+      loading={loading}
+      onClick={() => {
+        setLoading(true)
+        setTimeout(() => setLoading(false), 2000)
+      }}
+    >
+      Send the message
+    </Button>
+  )
+}
+
+/** Click to start two seconds of work. */
+export const LoadingOnClick: Story = {
+  render: (args) => <SaveButton {...args} />,
+}
+
+/**
+ * Icons go next to the label as children. The library's icons are decorative
+ * by default. An icon-only button has no visible text, so it must have an
+ * `aria-label` that says what it does.
+ */
+export const WithIcons: Story = {
+  render: (args) => (
+    <div style={row}>
+      <Button {...args}>
+        <QuillIcon />
+        Sign the letter
+      </Button>
+      <Button {...args} variant="secondary">
+        Onward
+        <ArrowRightIcon />
+      </Button>
+      <Button {...args} variant="ghost" aria-label="Close">
+        <CloseIcon />
+      </Button>
+      <Button {...args} variant="secondary" frame="simple" aria-label="Add to favourites">
+        <EvenstarIcon />
+      </Button>
+    </div>
+  ),
 }
 
 export const Disabled: Story = {

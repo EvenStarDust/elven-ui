@@ -16,6 +16,7 @@ const SEMANTIC_COLORS = [
   'ornament-highlight',
   'ornament-shade',
   'ornament-gleam',
+  'icon-accent',
   'leaf',
   'leaf-highlight',
   'leaf-gleam',
