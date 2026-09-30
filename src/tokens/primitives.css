@@ -14,6 +14,7 @@
     --elven-sepia-900: #2d251b;
 
     /* Weathered rust */
+    --elven-rust-100: #e8d6c4;
     --elven-rust-600: #86472b;
     --elven-rust-700: #6f3a22;
     --elven-rust-800: #5e2f1b;
@@ -22,6 +23,7 @@
     --elven-gold-50: #f3e9d0;
     --elven-gold-100: #eaddbf;
     --elven-gold-300: #c9b283;
+    --elven-straw-200: #f0deae;
     --elven-gold-400: #c89e40;
     --elven-gold-500: #b38a2e;
     --elven-gold-800: #7a5a14;
@@ -30,6 +32,7 @@
     --elven-umber-950: #1f170a;
 
     /* Gold leaf for ornaments: shade, base and the highlight of the sheen */
+    --elven-gilt-100: #fff1bf;
     --elven-gilt-300: #e6c570;
     --elven-gilt-500: #c09a45;
     --elven-gilt-700: #8c6b26;
@@ -45,6 +48,7 @@
     --elven-amber-300: #e6b97f;
     --elven-amber-400: #d9a061;
     --elven-amber-500: #c88d48;
+    --elven-amber-950: #33281a;
 
     /* Text on colored fills: candlelight, ash, pale sage and their dark twins */
     --elven-candle-200: #f4ddb2;
@@ -58,8 +62,20 @@
     --elven-verdigris-300: #82bdb5;
     --elven-verdigris-700: #2e6b66;
 
+    /* Ivy leaves and bark for the vine frame */
+    /* Warm sunlight filtering through leaves; the sheen on green leaves */
+    --elven-sun-100: #fff6d6;
+    --elven-ivy-100: #e4f0b8;
+    --elven-ivy-400: #9dbb68;
+    --elven-ivy-600: #5e7e3c;
+    --elven-ivy-900: #2f4420;
+    --elven-bark-600: #6a4428;
+    --elven-bark-900: #3b2414;
+
     /* Status */
     --elven-blood-700: #962b24;
+    --elven-blood-800: #7d231d;
+    --elven-ember-300: #e68c78;
     --elven-ember-400: #db7862;
     --elven-moss-300: #a3b58e;
     --elven-moss-700: #4e6636;

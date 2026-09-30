@@ -1,0 +1,500 @@
+@layer elven.components {
+  .button {
+    /*
+     * Private custom properties (leading underscore). Variants set the colors,
+     * sizes set the geometry, and the frame rules below consume both.
+     */
+    --_fill: transparent;
+    --_ink: var(--elven-color-accent-text);
+    --_hairline: var(--elven-color-ornament);
+    --_edge: var(--elven-color-accent);
+    --_line: calc(var(--elven-ornament-width) * 1.5);
+    --_hair: var(--elven-ornament-width);
+    --_gap: var(--elven-ornament-gap);
+    --_notch: calc(var(--elven-ornament-notch) * 0.7);
+    --_point: calc(var(--elven-size-control-md) * 0.3);
+    --_padding: var(--elven-space-5);
+    --_sheen: linear-gradient(
+      135deg,
+      var(--elven-color-ornament-shade) 0%,
+      var(--elven-color-ornament) 22%,
+      var(--elven-color-ornament-highlight) 42%,
+      var(--elven-color-ornament) 58%,
+      var(--elven-color-ornament-shade) 82%,
+      var(--elven-color-ornament) 100%
+    );
+
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--elven-size-control-md);
+    padding-inline: var(--_padding);
+    border: 0;
+    border-radius: var(--elven-radius-sm);
+    background-color: var(--_fill);
+    color: var(--_ink);
+
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-lg);
+    font-weight: var(--elven-font-weight-semibold);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--elven-letter-spacing-caps);
+    line-height: var(--elven-line-height-tight);
+    white-space: nowrap;
+    text-decoration: none;
+
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--elven-duration-fast) var(--elven-ease-dissolve),
+      color var(--elven-duration-fast) var(--elven-ease-dissolve);
+  }
+
+  .label {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--elven-space-2);
+
+    /*
+     * Small caps sit on the baseline, so their ink is centered ~0.07em below
+     * the middle of the line box (measured with Cormorant Garamond). Lift the
+     * label so the text looks optically centered. `text-box-trim` would do this
+     * properly but is not supported in our target browsers yet.
+     */
+    translate: 0 -0.07em;
+
+    /* Letter spacing also trails the last letter; mirror it on the start so the text centers. */
+    padding-inline-start: var(--elven-letter-spacing-caps);
+  }
+
+  .frame {
+    display: none;
+  }
+
+  .button:focus-visible {
+    outline: var(--elven-focus-width) solid var(--elven-color-focus);
+    outline-offset: var(--elven-focus-offset);
+  }
+
+  .button:active:not(:disabled) {
+    translate: 0 1px;
+  }
+
+  .button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Sizes */
+
+  .button[data-size='sm'] {
+    --_gap: calc(var(--elven-ornament-gap) * 0.67);
+    --_notch: calc(var(--elven-ornament-notch) * 0.5);
+    --_point: calc(var(--elven-size-control-sm) * 0.3);
+    --_padding: var(--elven-space-3);
+
+    min-block-size: var(--elven-size-control-sm);
+    font-size: var(--elven-font-size-md);
+  }
+
+  .button[data-size='lg'] {
+    --_notch: calc(var(--elven-ornament-notch) * 0.9);
+    --_point: calc(var(--elven-size-control-lg) * 0.3);
+    --_padding: var(--elven-space-6);
+
+    min-block-size: var(--elven-size-control-lg);
+    font-size: var(--elven-font-size-xl);
+  }
+
+  /* Variants */
+
+  .button[data-variant='primary'] {
+    --_fill: var(--elven-color-accent);
+    --_ink: var(--elven-color-on-accent);
+    --_hairline: var(--elven-color-on-accent);
+    --_edge: var(--elven-color-accent-hover);
+  }
+
+  .button[data-variant='primary']:hover:not(:disabled) {
+    --_fill: var(--elven-color-accent-hover);
+  }
+
+  .button[data-variant='danger'] {
+    --_fill: var(--elven-color-danger);
+    --_ink: var(--elven-color-on-danger);
+    --_hairline: var(--elven-color-on-danger);
+    --_edge: var(--elven-color-danger-hover);
+  }
+
+  .button[data-variant='danger']:hover:not(:disabled) {
+    --_fill: var(--elven-color-danger-hover);
+  }
+
+  .button[data-variant='secondary']:hover:not(:disabled),
+  .button[data-variant='ghost']:hover:not(:disabled) {
+    --_fill: var(--elven-color-accent-subtle);
+  }
+
+  /* Frames */
+
+  /* Plain frames get soft corners; ornate ones take their shape from the frame layers. */
+  .button:is([data-frame='simple'], [data-frame='none']) {
+    border-radius: var(--elven-radius-xl);
+  }
+
+  .button[data-frame='simple']:not([data-variant='ghost']) {
+    box-shadow: inset 0 0 0 var(--_hair) var(--_edge);
+  }
+
+  /*
+   * Ornate frames are four stacked layers, all cut to the same shape:
+   * gilt outer line, fill, inner hairline, fill. They live on pseudo-elements
+   * and the frame span rather than on the button itself, because a mask or
+   * clip-path on the button would also cut away its focus outline.
+   *
+   * `--_o` is each layer's distance from the outer edge. The shapes use it to
+   * stay parallel, so every line keeps the same thickness around the corners.
+   */
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost']) {
+    background-color: transparent;
+  }
+
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost'])::before,
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost'])::after,
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost']) .frame,
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost']) .frame::before {
+    content: '';
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    transition: background-color var(--elven-duration-fast) var(--elven-ease-dissolve);
+  }
+
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost'])::before {
+    --_o: 0px;
+
+    inset: 0;
+    z-index: 0;
+    background: var(--_sheen);
+  }
+
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost'])::after {
+    --_o: var(--_line);
+
+    inset: var(--_line);
+    z-index: 1;
+    background-color: var(--_fill);
+  }
+
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost']) .frame {
+    --_o: calc(var(--_line) + var(--_gap));
+
+    inset: calc(var(--_line) + var(--_gap));
+    z-index: 2;
+    background-color: var(--_hairline);
+  }
+
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost']) .frame::before {
+    --_o: calc(var(--_line) + var(--_gap) + var(--_hair));
+
+    inset: var(--_hair);
+    background-color: var(--_fill);
+  }
+
+  /* An ornate secondary button is a parchment plaque, so its fill must be opaque. */
+  .button[data-variant='secondary']:is([data-frame='scooped'], [data-frame='pointed']) {
+    --_fill: var(--elven-color-surface);
+  }
+
+  .button[data-variant='secondary']:is([data-frame='scooped'], [data-frame='pointed']):hover:not(:disabled) {
+    --_fill: var(--elven-color-accent-subtle);
+  }
+
+  /* Click effects that stay inside the button follow the frame's shape, inside its outer line. */
+  .button:is([data-frame='scooped'], [data-frame='pointed']):not([data-variant='ghost']) > [data-burst='contained'] {
+    --_o: var(--_line);
+
+    inset: var(--_line);
+    border-radius: 0;
+  }
+
+  /* Scooped: concave quarter circles cut from every corner, as on the card frame. */
+  .button[data-frame='scooped']:not([data-variant='ghost']) > [data-burst='contained'],
+  .button[data-frame='scooped']:not([data-variant='ghost'])::before,
+  .button[data-frame='scooped']:not([data-variant='ghost'])::after,
+  .button[data-frame='scooped']:not([data-variant='ghost']) .frame,
+  .button[data-frame='scooped']:not([data-variant='ghost']) .frame::before {
+    --_r: calc(var(--_notch) + var(--_o));
+    --_near: calc(var(--_o) * -1);
+    --_far: calc(100% + var(--_o));
+
+    mask:
+      radial-gradient(circle at var(--_near) var(--_near), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 0 0 / 51% 51%
+        no-repeat,
+      radial-gradient(circle at var(--_far) var(--_near), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 100% 0 / 51% 51%
+        no-repeat,
+      radial-gradient(circle at var(--_near) var(--_far), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 0 100% / 51% 51%
+        no-repeat,
+      radial-gradient(circle at var(--_far) var(--_far), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 100% 100% /
+        51% 51% no-repeat;
+  }
+
+  /* Pointed: a plaque with pointed ends. Inner layers get shallower points so the slants stay parallel. */
+  .button[data-frame='pointed']:not([data-variant='ghost']) {
+    padding-inline: calc(var(--_padding) + var(--_point) * 0.5);
+  }
+
+  .button[data-frame='pointed']:not([data-variant='ghost']) > [data-burst='contained'],
+  .button[data-frame='pointed']:not([data-variant='ghost'])::before,
+  .button[data-frame='pointed']:not([data-variant='ghost'])::after,
+  .button[data-frame='pointed']:not([data-variant='ghost']) .frame,
+  .button[data-frame='pointed']:not([data-variant='ghost']) .frame::before {
+    --_p: calc(var(--_point) - var(--_o) * 0.6);
+
+    clip-path: polygon(
+      var(--_p) 0,
+      calc(100% - var(--_p)) 0,
+      100% 50%,
+      calc(100% - var(--_p)) 100%,
+      var(--_p) 100%,
+      0 50%
+    );
+  }
+
+  /*
+   * Gate: a gilded openwork gate stands in front of the button, which shows
+   * through its bars. On hover or keyboard focus the two halves slide apart
+   * into the button's edges, like a sliding garden gate. Pure CSS: each half
+   * is a pseudo-element painted with the gold sheen and cut into rails, bars
+   * and scroll friezes with masks.
+   */
+  .button[data-frame='gate']:not([data-variant='ghost']) {
+    --_frieze: 9px;
+
+    overflow: hidden;
+    border-radius: var(--elven-radius-xl);
+    box-shadow: inset 0 0 0 calc(var(--elven-ornament-width) * 1.5) var(--elven-color-ornament);
+  }
+
+  .button[data-frame='gate'][data-size='sm']:not([data-variant='ghost']) {
+    --_frieze: 7px;
+  }
+
+  /* An opaque fill, so the gate reads as standing in front of something. */
+  .button[data-variant='secondary'][data-frame='gate'] {
+    --_fill: var(--elven-color-surface);
+  }
+
+  .button[data-variant='secondary'][data-frame='gate']:hover:not(:disabled) {
+    --_fill: var(--elven-color-accent-subtle);
+  }
+
+  /* A soft halo in the fill color keeps the label readable between the bars. */
+  .button[data-frame='gate']:not([data-variant='ghost']) .label {
+    text-shadow:
+      0 0 3px var(--_fill),
+      0 0 6px var(--_fill),
+      0 0 10px var(--_fill);
+  }
+
+  .button[data-frame='gate']:not([data-variant='ghost'])::before,
+  .button[data-frame='gate']:not([data-variant='ghost'])::after {
+    --_rail: calc(var(--elven-ornament-width) * 1.5);
+    --_scroll-top: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='9'%3E%3Cpath d='M0 8.5C5 8.5 5 2 9 2C12 2 12 6 10 6C8.5 6 8.5 4 9.5 4M18 8.5C13 8.5 13 2 9 2' fill='none' stroke='%23000'/%3E%3C/svg%3E");
+    --_scroll-bottom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='9'%3E%3Cpath d='M0 .5C5 .5 5 7 9 7C12 7 12 3 10 3C8.5 3 8.5 5 9.5 5M18 .5C13 .5 13 7 9 7' fill='none' stroke='%23000'/%3E%3C/svg%3E");
+
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inline-size: 50%;
+    z-index: 2;
+    background: var(--_sheen);
+    pointer-events: none;
+
+    /* Outer rails, the heavier meeting stile, friezes of scrolls, and bars between them. */
+    mask:
+      linear-gradient(#000 0 0) top / 100% var(--_rail) no-repeat,
+      linear-gradient(#000 0 0) bottom / 100% var(--_rail) no-repeat,
+      linear-gradient(#000 0 0) left / var(--_rail) 100% no-repeat,
+      linear-gradient(#000 0 0) right / calc(var(--_rail) * 1.4) 100% no-repeat,
+      linear-gradient(#000 0 0) 0 var(--_frieze) / 100% var(--elven-ornament-width) no-repeat,
+      linear-gradient(#000 0 0) 0 calc(100% - var(--_frieze)) / 100% var(--elven-ornament-width) no-repeat,
+      var(--_scroll-top) 0 0 / calc(var(--_frieze) * 2) var(--_frieze) repeat-x,
+      var(--_scroll-bottom) 0 100% / calc(var(--_frieze) * 2) var(--_frieze) repeat-x,
+      repeating-linear-gradient(90deg, transparent 0 11px, #000 11px calc(11px + var(--elven-ornament-width))) 0
+        var(--_frieze) / 100% calc(100% - var(--_frieze) * 2) no-repeat;
+    transition: translate calc(var(--elven-duration-slow) * 2.25) cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .button[data-frame='gate']:not([data-variant='ghost'])::before {
+    inset-inline-start: 0;
+  }
+
+  /* The right half is the left one mirrored, so its meeting stile faces the middle too. */
+  .button[data-frame='gate']:not([data-variant='ghost'])::after {
+    inset-inline-end: 0;
+    scale: -1 1;
+  }
+
+  .button[data-frame='gate']:not([data-variant='ghost']):is(:hover, :focus-visible):not(:disabled)::before {
+    translate: -100% 0;
+  }
+
+  .button[data-frame='gate']:not([data-variant='ghost']):is(:hover, :focus-visible):not(:disabled)::after {
+    translate: 100% 0;
+  }
+
+  /*
+   * Vine: a bark border at rest; on hover or keyboard focus a golden ivy grows
+   * around it (see Vine.tsx). Stacking inside the button, bottom to top:
+   * vine stretches behind the button, bark and fill, label, vine in front.
+   * The fill sits on ::before rather than the button so the back layer can
+   * slip under it.
+   */
+  .button[data-frame='vine']:not([data-variant='ghost']) {
+    background-color: transparent;
+    border-radius: var(--elven-radius-xl);
+  }
+
+  .button[data-frame='vine']:not([data-variant='ghost'])::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border: calc(var(--elven-ornament-width) * 3) solid transparent;
+    border-radius: inherit;
+    /*
+     * Layers, top to bottom: the fill; wood grain (fractal noise stretched
+     * along the border, drawn as translucent dark streaks so the bark color
+     * still comes from the theme); a light-to-dark bevel that rounds the
+     * branch; and the bark color itself.
+     */
+    background:
+      linear-gradient(var(--_fill), var(--_fill)) padding-box,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='48'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.55' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.6 0 0 0 -0.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")
+        0 0 / 240px 48px border-box,
+      linear-gradient(rgb(255 255 255 / 0.14), transparent 45%, rgb(0 0 0 / 0.28)) border-box,
+      linear-gradient(
+          90deg,
+          var(--elven-color-bark) 0%,
+          var(--elven-color-bark-light) 18%,
+          var(--elven-color-bark) 40%,
+          var(--elven-color-bark-light) 63%,
+          var(--elven-color-bark) 82%,
+          var(--elven-color-bark-light) 100%
+        )
+        border-box;
+    pointer-events: none;
+  }
+
+  /* An opaque fill, so the stretches of vine behind the button stay hidden. */
+  .button[data-variant='secondary'][data-frame='vine'] {
+    --_fill: var(--elven-color-surface);
+  }
+
+  .button[data-variant='secondary'][data-frame='vine']:hover:not(:disabled) {
+    --_fill: var(--elven-color-accent-subtle);
+  }
+
+  .vine {
+    position: absolute;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .vineBack {
+    z-index: 0;
+    filter: brightness(0.65);
+  }
+
+  .vineFront {
+    z-index: 4;
+  }
+
+  .stem {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: var(--_length) calc(var(--_length) + 2);
+    stroke-dashoffset: var(--_length);
+    transition: stroke-dashoffset var(--elven-duration-fast) linear;
+  }
+
+  .stemHighlight {
+    stroke: var(--elven-color-ornament-gleam);
+    opacity: 0.3;
+  }
+
+  .button[data-vine-leaves='green'] .stemHighlight {
+    stroke: var(--elven-color-leaf-gleam);
+  }
+
+  .leaf,
+  .tendril {
+    transform-box: fill-box;
+    transform-origin: 0 50%;
+    scale: 0;
+    transition: scale var(--elven-duration-fast) ease-in;
+  }
+
+  .tendril {
+    fill: none;
+    stroke-width: 1;
+    stroke-linecap: round;
+    transform-origin: 0 0;
+  }
+
+  .vein {
+    fill: none;
+    stroke: var(--elven-color-ornament-gleam);
+    stroke-width: 0.6;
+    opacity: 0.35;
+  }
+
+  .leaf[data-color='green'] .vein {
+    stroke: var(--elven-color-leaf-gleam);
+  }
+
+  .button[data-vine='grown'] .stem {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset var(--_duration) linear var(--_delay);
+  }
+
+  /* A slight overshoot, like a leaf unfurling. */
+  .button[data-vine='grown'] :is(.leaf, .tendril) {
+    scale: 1;
+    transition: scale 450ms cubic-bezier(0.3, 1.6, 0.5, 1) var(--_delay);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stem,
+    .leaf,
+    .tendril,
+    .button[data-vine='grown'] :is(.stem, .leaf, .tendril) {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* Forced colors drop fills and gradients, so fall back to a plain system border. */
+    .button {
+      border: 1px solid ButtonText;
+    }
+
+    .button::before,
+    .button::after,
+    .frame,
+    .vine {
+      display: none !important;
+    }
+
+    .button:disabled {
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}

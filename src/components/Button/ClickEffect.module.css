@@ -1,0 +1,245 @@
+@layer elven.components {
+  /* Layers for bursts: contained ones are clipped to the button, free ones may overflow it. */
+  .contained,
+  .free {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .contained {
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .free {
+    z-index: 5;
+    overflow: visible;
+  }
+
+  /* A zero-size anchor at the click point that particles are centered on. */
+  .origin {
+    position: absolute;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  /* Ripple: Galadriel's mirror, two gilt rings spreading like a drop on still water. */
+  .ring {
+    position: absolute;
+    inset: -4px;
+    border: 1.5px solid var(--elven-color-ornament-highlight);
+    border-radius: 50%;
+    animation: ripple 700ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  }
+
+  .ring + .ring {
+    border-width: 1px;
+    opacity: 0;
+    animation-delay: 120ms;
+  }
+
+  @keyframes ripple {
+    from {
+      scale: 0;
+      opacity: 1;
+    }
+
+    to {
+      scale: 28;
+      opacity: 0;
+    }
+  }
+
+  /*
+   * Velvet: a wave of light and shadow, like a silk gown rippling: a shaded
+   * fold, a highlight on its crest, and a softer fold behind. Drawn with plain
+   * translucent colors; a blend mode would only blend within this layer's own
+   * stacking context and never reach the button's fill.
+   */
+  .wave {
+    position: absolute;
+    inset: -7px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      transparent 30%,
+      rgb(0 0 0 / 0.24) 44%,
+      rgb(255 244 220 / 0.36) 58%,
+      rgb(0 0 0 / 0.16) 72%,
+      transparent 86%
+    );
+    /*
+     * An even pace, so the fold is seen rolling across the button instead of
+     * leaping past it in a couple of frames.
+     */
+    animation: velvet 900ms cubic-bezier(0.3, 0.3, 0.45, 1) forwards;
+  }
+
+  .wave + .wave {
+    opacity: 0;
+    animation-delay: 120ms;
+  }
+
+  @keyframes velvet {
+    0% {
+      scale: 0;
+      opacity: 1;
+    }
+
+    65% {
+      opacity: 0.9;
+    }
+
+    100% {
+      scale: 22;
+      opacity: 0;
+    }
+  }
+
+  /* Stardust: an Evenstar flares where you click and scatters star dust. */
+  .star,
+  .spark {
+    position: absolute;
+    clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  }
+
+  .star {
+    inset: -13px;
+    background: radial-gradient(
+      circle,
+      var(--elven-color-ornament-gleam) 0 18%,
+      var(--elven-color-ornament-highlight) 40%,
+      transparent 70%
+    );
+    animation: evenstar 600ms ease-out forwards;
+  }
+
+  .spark {
+    inset: -3px;
+    background: var(--elven-color-ornament-gleam);
+    filter: drop-shadow(0 0 3px var(--elven-color-ornament-highlight));
+    animation: spark 650ms cubic-bezier(0.15, 0.8, 0.3, 1) forwards;
+  }
+
+  @keyframes evenstar {
+    0% {
+      scale: 0;
+      rotate: -30deg;
+      opacity: 1;
+    }
+
+    50% {
+      scale: 1.2;
+      rotate: 10deg;
+      opacity: 1;
+    }
+
+    100% {
+      scale: 0.6;
+      rotate: 30deg;
+      opacity: 0;
+    }
+  }
+
+  @keyframes spark {
+    0% {
+      translate: 0 0;
+      scale: 0.4;
+      opacity: 1;
+    }
+
+    70% {
+      opacity: 1;
+    }
+
+    100% {
+      translate: var(--_dx) var(--_dy);
+      scale: 1.1;
+      rotate: 90deg;
+      opacity: 0;
+    }
+  }
+
+  /* Leaves: a few golden mallorn leaves break away and drift down. */
+  .fallingLeaf {
+    position: absolute;
+    inline-size: 10px;
+    block-size: 16px;
+    margin: -8px -5px;
+    background: linear-gradient(
+      135deg,
+      var(--elven-color-ornament-highlight),
+      var(--elven-color-ornament) 55%,
+      var(--elven-color-ornament-shade)
+    );
+    clip-path: path('M5 0C9 4 10 9 5 16C0 9 1 4 5 0Z');
+    opacity: 0;
+    animation: fall var(--_fall) cubic-bezier(0.3, 0.1, 0.5, 1) forwards;
+  }
+
+  @keyframes fall {
+    0% {
+      translate: 0 0;
+      rotate: var(--_turn);
+      opacity: 0;
+    }
+
+    10% {
+      opacity: 1;
+    }
+
+    35% {
+      translate: var(--_sway) 16px;
+      rotate: calc(var(--_turn) + 40deg);
+    }
+
+    65% {
+      translate: calc(var(--_sway) * -0.6) 32px;
+      rotate: calc(var(--_turn) - 20deg);
+    }
+
+    100% {
+      translate: calc(var(--_sway) * 0.4) 50px;
+      rotate: calc(var(--_turn) + 60deg);
+      opacity: 0;
+    }
+  }
+
+  /* Signature: a quill flourish under the label, sized to the label so it never overflows. */
+  .signature {
+    position: absolute;
+    inset-inline: 0;
+    /* The line box extends below the small caps; sit just under the baseline instead. */
+    inset-block-start: calc(100% - 0.28em);
+    inline-size: 100%;
+    block-size: 0.3em;
+    overflow: visible;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .signature path {
+    fill: none;
+    stroke: var(--elven-color-ornament-highlight);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 1px var(--elven-color-ornament-gleam));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contained,
+    .free {
+      display: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .contained,
+    .free,
+    .signature {
+      display: none;
+    }
+  }
+}

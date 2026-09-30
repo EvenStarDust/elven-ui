@@ -17,6 +17,7 @@
     --elven-radius-sm: 2px;
     --elven-radius-md: 3px;
     --elven-radius-lg: 4px;
+    --elven-radius-xl: 6px;
     --elven-radius-full: 9999px;
 
     /*
@@ -31,11 +32,13 @@
     --elven-font-size-sm: 0.875rem;
     --elven-font-size-md: 1rem;
     --elven-font-size-lg: 1.25rem;
-    --elven-font-size-xl: 1.75rem;
-    --elven-font-size-2xl: 2.25rem;
+    --elven-font-size-xl: 1.5rem;
+    --elven-font-size-2xl: 1.75rem;
+    --elven-font-size-3xl: 2.25rem;
 
     --elven-font-weight-regular: 400;
     --elven-font-weight-medium: 500;
+    --elven-font-weight-semibold: 600;
 
     --elven-line-height-tight: 1.2;
     --elven-line-height-normal: 1.5;
@@ -56,6 +59,11 @@
     --elven-ornament-width: 1px;
     --elven-ornament-gap: 3px;
     --elven-ornament-notch: 10px;
+
+    /* Heights shared by buttons, inputs and toggles so they line up in a row */
+    --elven-size-control-sm: 2rem;
+    --elven-size-control-md: 2.5rem;
+    --elven-size-control-lg: 3rem;
 
     --elven-focus-width: 2px;
     --elven-focus-offset: 2px;
