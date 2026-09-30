@@ -3,13 +3,18 @@ import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
+import pkg from './package.json' with { type: 'json' }
+
+// Dependencies stay imports in the output (so consumers dedupe them) rather than being bundled.
+const dependencies = [...Object.keys(pkg.dependencies ?? {}), ...Object.keys(pkg.peerDependencies ?? {})]
+const external = (id: string) => dependencies.some((name) => id === name || id.startsWith(`${name}/`))
 
 export default defineConfig({
   plugins: [
     react(),
     dts({
       include: ['src'],
-      exclude: ['**/*.stories.tsx', '**/*.test.tsx', 'src/test'],
+      exclude: ['**/*.stories.tsx', '**/*.test.ts', '**/*.test.tsx', 'src/test'],
     }),
   ],
   css: {
@@ -25,7 +30,12 @@ export default defineConfig({
       cssFileName: 'elven-ui',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external,
+      output: {
+        // Bundling drops per-file directives, so mark the whole entry as client code
+        // for React Server Components (e.g. the Next.js App Router).
+        banner: "'use client';",
+      },
     },
     sourcemap: true,
   },
