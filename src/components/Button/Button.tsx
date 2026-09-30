@@ -55,8 +55,8 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
    */
   asChild?: boolean
   /**
-   * Shows a turning Evenstar in place of the label and keeps the button's
-   * width. The button stays focusable but ignores clicks, and is marked
+   * Shows a quill writing a line of ink in place of the label and keeps the
+   * button's width. The button stays focusable but ignores clicks, and is marked
    * `aria-busy`.
    * @default false
    */
@@ -162,10 +162,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {effect.bursts}
       {loading && (
         <span className={styles.spinner}>
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            {/* The Evenstar: four long rays and four short ones. */}
-            <path d="M12 0L13.4 9.2L24 12L13.4 14.8L12 24L10.6 14.8L0 12L10.6 9.2Z" />
-            <path d="M12 12L17.7 6.3L14.2 12L17.7 17.7L12 12L6.3 17.7L9.8 12L6.3 6.3Z" opacity="0.6" />
+          {/* A quill writing a line of ink, lifting at the end and starting over. */}
+          <svg viewBox="0 0 60 30" aria-hidden="true" focusable="false">
+            <path className={styles.ink} d="M14 24C18 20 20 26 24 22S30 20 33 23S38 25 42 21" />
+            <g className={styles.quill}>
+              <path className={styles.nib} d="M14 24L17 16" />
+              <path className={styles.vane} d="M17 16C18 9 22 1 31 -5C29 2 25 10 19 17Z" />
+              <path className={styles.shaft} d="M17 16C21 9 25 2 31 -5M20 12L23 11M22 8L25 7M24 4L27 3" />
+            </g>
           </svg>
         </span>
       )}
