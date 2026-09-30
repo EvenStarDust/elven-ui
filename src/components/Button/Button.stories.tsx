@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { fn } from 'storybook/test'
+import { ArrowRightIcon, CloseIcon, EvenstarIcon, QuillIcon } from '../../icons'
 import { Button } from './Button'
 
 const meta = {
@@ -224,37 +225,10 @@ export const LoadingOnClick: Story = {
   render: (args) => <SaveButton {...args} />,
 }
 
-const icon = { width: '0.9em', height: '0.9em', 'aria-hidden': true } as const
-
-const QuillIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" {...icon}>
-    <path d="M20 3C13 5 8 10 6 17L4 21" />
-    <path d="M6 17C10 16 14 13 16 9" />
-  </svg>
-)
-
-const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...icon}>
-    <path d="M4 12H20M14 6L20 12L14 18" />
-  </svg>
-)
-
-const CloseIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...icon}>
-    <path d="M6 6L18 18M18 6L6 18" />
-  </svg>
-)
-
-const StarIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...icon}>
-    <path d="M12 2L13.8 10.2L22 12L13.8 13.8L12 22L10.2 13.8L2 12L10.2 10.2Z" />
-  </svg>
-)
-
 /**
- * Icons go next to the label as children. Mark decorative icons `aria-hidden`.
- * An icon-only button has no visible text, so it must have an `aria-label`
- * that says what it does.
+ * Icons go next to the label as children. The library's icons are decorative
+ * by default. An icon-only button has no visible text, so it must have an
+ * `aria-label` that says what it does.
  */
 export const WithIcons: Story = {
   render: (args) => (
@@ -265,13 +239,13 @@ export const WithIcons: Story = {
       </Button>
       <Button {...args} variant="secondary">
         Onward
-        <ArrowIcon />
+        <ArrowRightIcon />
       </Button>
       <Button {...args} variant="ghost" aria-label="Close">
         <CloseIcon />
       </Button>
       <Button {...args} variant="secondary" frame="simple" aria-label="Add to favourites">
-        <StarIcon />
+        <EvenstarIcon />
       </Button>
     </div>
   ),

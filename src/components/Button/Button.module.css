@@ -286,6 +286,11 @@
 
   /* Variants */
 
+  /* On a filled button the gold detail of an icon would vanish, so it follows the label color. */
+  .button:is([data-variant='primary'], [data-variant='danger']) {
+    --elven-icon-accent: currentColor;
+  }
+
   .button[data-variant='primary'] {
     --_fill: var(--elven-color-accent);
     --_ink: var(--elven-color-on-accent);
