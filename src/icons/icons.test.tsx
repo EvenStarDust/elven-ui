@@ -7,7 +7,7 @@ const icons = Object.entries(exports)
 
 describe('icons', () => {
   it('exports the whole set', () => {
-    expect(icons).toHaveLength(23)
+    expect(icons).toHaveLength(55)
   })
 
   describe.each(icons)('%s', (name, Icon) => {
@@ -16,7 +16,7 @@ describe('icons', () => {
       expect(name).toMatch(/Icon$/)
     })
 
-    it('renders an outline and is hidden from assistive technology by default', () => {
+    it('renders its shape and is hidden from assistive technology by default', () => {
       const { container } = render(<Icon />)
       const svg = container.querySelector('svg')!
       expect(svg).toHaveAttribute('aria-hidden', 'true')

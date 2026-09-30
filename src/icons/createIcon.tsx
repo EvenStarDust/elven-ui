@@ -13,6 +13,7 @@ export interface IconProps extends ComponentPropsWithoutRef<'svg'> {
 /**
  * Builds an icon component from its path data: `line` is drawn as a thin
  * outline in the current text color, `accent` is filled with the theme's gold.
+ * Either may be empty.
  *
  * Icons are decorative by default (`aria-hidden`). Pass `aria-label` to give
  * an icon a meaning of its own; it is then exposed as an image.
@@ -32,7 +33,7 @@ export function createIcon(displayName: string, line: string, accent?: string) {
         focusable="false"
         {...rest}
       >
-        <path className={styles.line} d={line} />
+        {line && <path className={styles.line} d={line} />}
         {accent && <path className={styles.accent} d={accent} />}
       </svg>
     )
