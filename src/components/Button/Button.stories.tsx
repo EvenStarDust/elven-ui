@@ -224,6 +224,40 @@ export const LoadingOnClick: Story = {
   render: (args) => <SaveButton {...args} />,
 }
 
+const Leaf = () => (
+  <svg viewBox="0 0 24 24" width="0.9em" height="0.9em" fill="currentColor" aria-hidden="true">
+    <path d="M12 2C17 6 19 12 12 22C5 12 7 6 12 2Z" />
+  </svg>
+)
+
+const Arrow = () => (
+  <svg viewBox="0 0 24 24" width="0.9em" height="0.9em" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <path d="M4 12H20M14 6L20 12L14 18" />
+  </svg>
+)
+
+/**
+ * Icons go next to the label as children. Mark decorative icons `aria-hidden`.
+ * An icon-only button has no visible text, so it must have an `aria-label`.
+ */
+export const WithIcons: Story = {
+  render: (args) => (
+    <div style={row}>
+      <Button {...args}>
+        <Leaf />
+        Walk in Lórien
+      </Button>
+      <Button {...args} variant="secondary">
+        Onward
+        <Arrow />
+      </Button>
+      <Button {...args} aria-label="Gather leaves" frame="simple">
+        <Leaf />
+      </Button>
+    </div>
+  ),
+}
+
 export const Disabled: Story = {
   render: (args) => (
     <div style={row}>

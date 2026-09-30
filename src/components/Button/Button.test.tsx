@@ -9,6 +9,15 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Enter Imladris' })).toBeInTheDocument()
   })
 
+  it('takes its name from aria-label when it only holds an icon', () => {
+    render(
+      <Button aria-label="Gather leaves">
+        <svg aria-hidden="true" />
+      </Button>,
+    )
+    expect(screen.getByRole('button', { name: 'Gather leaves' })).toBeInTheDocument()
+  })
+
   it('defaults to type="button" so it never submits a form by accident', () => {
     render(<Button>Save</Button>)
     expect(screen.getByRole('button')).toHaveAttribute('type', 'button')
