@@ -75,5 +75,12 @@
     "vite-plugin-dts": "^5.1.1",
     "vitest": "^5.0.2"
   },
-  "packageManager": "pnpm@10.15.1"
+  "packageManager": "pnpm@10.15.1",
+  "browserslist": [
+    "chrome >= 99",
+    "edge >= 99",
+    "firefox >= 97",
+    "safari >= 15.4",
+    "ios_saf >= 15.4"
+  ]
 }
