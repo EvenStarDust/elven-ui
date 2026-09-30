@@ -224,35 +224,54 @@ export const LoadingOnClick: Story = {
   render: (args) => <SaveButton {...args} />,
 }
 
-const Leaf = () => (
-  <svg viewBox="0 0 24 24" width="0.9em" height="0.9em" fill="currentColor" aria-hidden="true">
-    <path d="M12 2C17 6 19 12 12 22C5 12 7 6 12 2Z" />
+const icon = { width: '0.9em', height: '0.9em', 'aria-hidden': true } as const
+
+const QuillIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" {...icon}>
+    <path d="M20 3C13 5 8 10 6 17L4 21" />
+    <path d="M6 17C10 16 14 13 16 9" />
   </svg>
 )
 
-const Arrow = () => (
-  <svg viewBox="0 0 24 24" width="0.9em" height="0.9em" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+const ArrowIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...icon}>
     <path d="M4 12H20M14 6L20 12L14 18" />
+  </svg>
+)
+
+const CloseIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...icon}>
+    <path d="M6 6L18 18M18 6L6 18" />
+  </svg>
+)
+
+const StarIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...icon}>
+    <path d="M12 2L13.8 10.2L22 12L13.8 13.8L12 22L10.2 13.8L2 12L10.2 10.2Z" />
   </svg>
 )
 
 /**
  * Icons go next to the label as children. Mark decorative icons `aria-hidden`.
- * An icon-only button has no visible text, so it must have an `aria-label`.
+ * An icon-only button has no visible text, so it must have an `aria-label`
+ * that says what it does.
  */
 export const WithIcons: Story = {
   render: (args) => (
     <div style={row}>
       <Button {...args}>
-        <Leaf />
-        Walk in Lórien
+        <QuillIcon />
+        Sign the letter
       </Button>
       <Button {...args} variant="secondary">
         Onward
-        <Arrow />
+        <ArrowIcon />
       </Button>
-      <Button {...args} aria-label="Gather leaves" frame="simple">
-        <Leaf />
+      <Button {...args} variant="ghost" aria-label="Close">
+        <CloseIcon />
+      </Button>
+      <Button {...args} variant="secondary" frame="simple" aria-label="Add to favourites">
+        <StarIcon />
       </Button>
     </div>
   ),
