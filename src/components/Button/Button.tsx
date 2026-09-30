@@ -163,8 +163,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {loading && (
         <span className={styles.spinner}>
           {/* A quill writing a line of ink, lifting at the end and starting over. */}
-          <svg viewBox="0 0 60 30" aria-hidden="true" focusable="false">
-            <path className={styles.ink} d="M14 24C18 20 20 26 24 22S30 20 33 23S38 25 42 21" />
+          {/* The view box spans the quill's full reach, including its lift, so it stays inside the button. */}
+          <svg viewBox="12 -12 50 40" aria-hidden="true" focusable="false">
+            {/* pathLength=1 makes the dash reveal proportional to the real length, so it can match the quill. */}
+            <path className={styles.ink} pathLength={1} d="M14 24C18 20 20 26 24 22S30 20 33 23S38 25 42 21" />
             <g className={styles.quill}>
               <path className={styles.nib} d="M14 24L17 16" />
               <path className={styles.vane} d="M17 16C18 9 22 1 31 -5C29 2 25 10 19 17Z" />

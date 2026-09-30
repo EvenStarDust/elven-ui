@@ -109,8 +109,8 @@
   }
 
   .spinner svg {
-    inline-size: 3.2em;
-    block-size: 1.6em;
+    inline-size: 1.875em;
+    block-size: 1.5em;
     overflow: visible;
   }
 
@@ -119,13 +119,16 @@
     stroke: currentColor;
     stroke-width: 1.3;
     stroke-linecap: round;
-    stroke-dasharray: 60;
-    stroke-dashoffset: 60;
-    animation: quill-ink 1.8s ease-in-out infinite;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: quill-ink 1.8s linear infinite;
   }
 
+  /* Rotates around the nib, so the wobble never pulls the tip off the line. */
   .quill {
-    animation: quill-write 1.8s ease-in-out infinite;
+    transform-box: view-box;
+    transform-origin: 14px 24px;
+    animation: quill-write 1.8s linear infinite;
   }
 
   .nib {
@@ -144,10 +147,15 @@
     stroke-width: 0.6;
   }
 
-  /* The line is written, holds, then fades as the quill lifts. */
+  /*
+   * Both animations share one linear timeline: the line is written during the
+   * first 55%, then fades while the quill lifts and returns. The quill's
+   * positions are points sampled along the ink path at every tenth of its
+   * length, so the nib always sits where the ink is being laid down.
+   */
   @keyframes quill-ink {
     0% {
-      stroke-dashoffset: 60;
+      stroke-dashoffset: 1;
       opacity: 1;
     }
 
@@ -162,45 +170,70 @@
     }
 
     100% {
-      stroke-dashoffset: 60;
+      stroke-dashoffset: 1;
       opacity: 0;
     }
   }
 
-  /* Small up-and-down strokes as it moves right, a lift at the end, then back to the start. */
   @keyframes quill-write {
     0% {
       translate: 0 0;
       rotate: 0deg;
     }
 
-    10% {
-      translate: 5px -1px;
+    5.5% {
+      translate: 2.83px -1.45px;
       rotate: -4deg;
     }
 
-    20% {
-      translate: 10px 1px;
+    11% {
+      translate: 5.99px -0.7px;
       rotate: 3deg;
     }
 
-    30% {
-      translate: 16px -1px;
+    16.5% {
+      translate: 9.09px -1.23px;
       rotate: -4deg;
     }
 
-    40% {
-      translate: 22px 1px;
+    22% {
+      translate: 11.57px -3.34px;
       rotate: 3deg;
+    }
+
+    27.5% {
+      translate: 14.62px -4.18px;
+      rotate: -4deg;
+    }
+
+    33% {
+      translate: 17.4px -2.55px;
+      rotate: 3deg;
+    }
+
+    38.5% {
+      translate: 19.76px -0.31px;
+      rotate: -4deg;
+    }
+
+    44% {
+      translate: 22.75px 0.71px;
+      rotate: 3deg;
+    }
+
+    49.5% {
+      translate: 25.6px -0.79px;
+      rotate: -4deg;
     }
 
     55% {
-      translate: 28px 0;
-      rotate: -2deg;
+      translate: 28px -3px;
+      rotate: 0deg;
     }
 
+    /* Lift off the page, then glide back to the start. */
     80% {
-      translate: 28px -3px;
+      translate: 28px -7px;
       rotate: -10deg;
     }
 
