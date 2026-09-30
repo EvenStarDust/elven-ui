@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useImperativeHandle, useRef, type ComponentPropsWithoutRef } from 'react'
+import { forwardRef, useId, useImperativeHandle, useRef, type ComponentPropsWithoutRef } from 'react'
 import { Slot, Slottable } from '@radix-ui/react-slot'
 import { clsx } from 'clsx'
 import { useClickEffect, type ClickEffect } from './ClickEffect'
@@ -54,6 +54,19 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
    * @example <Button asChild><a href="/rivendell">Enter Imladris</a></Button>
    */
   asChild?: boolean
+  /**
+   * Shows a turning Evenstar in place of the label and keeps the button's
+   * width. The button stays focusable but ignores clicks, and is marked
+   * `aria-busy`.
+   * @default false
+   */
+  loading?: boolean
+  /**
+   * Announced by screen readers while `loading`, as the button's description
+   * (its name stays the same). Translate it for your app.
+   * @default 'Loading'
+   */
+  loadingLabel?: string
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -64,6 +77,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     vineLeaves = 'mixed',
     clickEffect,
     asChild = false,
+    loading = false,
+    loadingLabel = 'Loading',
     // Native buttons default to type="submit", which silently submits enclosing forms.
     type = 'button',
     className,
@@ -81,12 +96,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const buttonRef = useRef<HTMLButtonElement>(null)
   useImperativeHandle(ref, () => buttonRef.current as HTMLButtonElement)
 
-  const vine = useVine(buttonRef, frame === 'vine' && variant !== 'ghost', vineLeaves)
+  const vine = useVine(buttonRef, frame === 'vine' && variant !== 'ghost' && !loading, vineLeaves)
   // Frames with their own hover animation stay quiet on click unless asked otherwise.
   const hasHoverEffect = frame === 'vine' || frame === 'gate'
-  const effect = useClickEffect(buttonRef, clickEffect ?? (hasHoverEffect ? 'none' : 'ripple'))
+  const effect = useClickEffect(buttonRef, loading ? 'none' : (clickEffect ?? (hasHoverEffect ? 'none' : 'ripple')))
 
   const Root = asChild ? Slot : 'button'
+  // While loading, the name stays the same and "Loading" is announced as a description.
+  const loadingId = useId()
+  const describedBy = [rest['aria-describedby'], loading && loadingId].filter(Boolean).join(' ') || undefined
 
   return (
     <Root
@@ -98,6 +116,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-frame={frame}
       data-vine={vine.state}
       data-vine-leaves={vine.state && vineLeaves}
+      data-loading={loading || undefined}
+      // Not the native disabled attribute: that would drop focus while the work finishes.
+      aria-busy={loading || undefined}
+      aria-disabled={loading || rest['aria-disabled'] || undefined}
       className={clsx(styles.button, className)}
       onPointerEnter={(event) => {
         onPointerEnter?.(event)
@@ -123,21 +145,44 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         if (event.button === 0) effect.playAt(event.clientX, event.clientY)
       }}
       onClick={(event) => {
+        if (loading) {
+          event.preventDefault()
+          return
+        }
         onClick?.(event)
         // A click with no pointer behind it (detail 0) came from Enter or Space.
         if (event.detail === 0) effect.playCentered()
       }}
       {...rest}
+      aria-describedby={describedBy}
     >
       {/* Holds the inner gilt line of ornate frames; purely decorative. */}
       <span className={styles.frame} aria-hidden="true" />
       {vine.element}
       {effect.bursts}
+      {loading && (
+        <span className={styles.spinner}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            {/* The Evenstar: four long rays and four short ones. */}
+            <path d="M12 0L13.4 9.2L24 12L13.4 14.8L12 24L10.6 14.8L0 12L10.6 9.2Z" />
+            <path d="M12 12L17.7 6.3L14.2 12L17.7 17.7L12 12L6.3 17.7L9.8 12L6.3 6.3Z" opacity="0.6" />
+          </svg>
+        </span>
+      )}
       {/* With asChild, the slotted element becomes the root and its own children go in the label. */}
       <Slottable child={children}>
         {(content) => (
           <span className={styles.label}>
             {content}
+            {/*
+             * Hidden from the name computation, but still read through
+             * aria-describedby, which also follows hidden elements.
+             */}
+            {loading && (
+              <span id={loadingId} className={styles.visuallyHidden} aria-hidden="true">
+                {loadingLabel}
+              </span>
+            )}
             {effect.signature}
           </span>
         )}

@@ -330,4 +330,85 @@ describe('Button', () => {
       expect(onClick).toHaveBeenCalledOnce()
     })
   })
+
+  describe('loading', () => {
+    it('marks the button busy and describes it as loading, keeping its name', () => {
+      render(<Button loading>Save</Button>)
+      const button = screen.getByRole('button', { name: 'Save' })
+      expect(button).toHaveAttribute('aria-busy', 'true')
+      expect(button).toHaveAttribute('aria-disabled', 'true')
+      expect(button).toHaveAccessibleDescription('Loading')
+    })
+
+    it('keeps a description passed in alongside the loading one', () => {
+      render(
+        <>
+          <p id="hint">Saves your draft</p>
+          <Button loading aria-describedby="hint">
+            Save
+          </Button>
+        </>,
+      )
+      expect(screen.getByRole('button')).toHaveAccessibleDescription('Saves your draft Loading')
+    })
+
+    it('uses a translated loading label', () => {
+      render(
+        <Button loading loadingLabel="Yükleniyor">
+          Kaydet
+        </Button>,
+      )
+      expect(screen.getByRole('button', { name: 'Kaydet' })).toHaveAccessibleDescription('Yükleniyor')
+    })
+
+    it('stays focusable but ignores clicks and keys', async () => {
+      const user = userEvent.setup()
+      const onClick = vi.fn()
+      render(
+        <Button loading onClick={onClick}>
+          Save
+        </Button>,
+      )
+      const button = screen.getByRole('button')
+
+      await user.tab()
+      expect(button).toHaveFocus()
+      await user.keyboard('{Enter}')
+      await user.click(button)
+      expect(onClick).not.toHaveBeenCalled()
+    })
+
+    it('does not submit a form while loading', async () => {
+      const user = userEvent.setup()
+      const onSubmit = vi.fn((event: SubmitEvent) => event.preventDefault())
+      render(
+        <form onSubmit={(event) => onSubmit(event.nativeEvent as SubmitEvent)}>
+          <Button type="submit" loading>
+            Save
+          </Button>
+        </form>,
+      )
+      await user.click(screen.getByRole('button'))
+      expect(onSubmit).not.toHaveBeenCalled()
+    })
+
+    it('plays no click effect while loading', () => {
+      const { container } = render(
+        <Button loading clickEffect="stardust">
+          Save
+        </Button>,
+      )
+      fireEvent.pointerDown(screen.getByRole('button'), { button: 0 })
+      expect(container.querySelectorAll('[data-burst]')).toHaveLength(0)
+    })
+
+    it('shows the button again once loading ends', () => {
+      const { rerender } = render(<Button loading>Save</Button>)
+      rerender(<Button>Save</Button>)
+      const button = screen.getByRole('button', { name: 'Save' })
+      expect(button).not.toHaveAttribute('aria-busy')
+      expect(button).not.toHaveAttribute('aria-disabled')
+      expect(button).not.toHaveAttribute('aria-describedby')
+    })
+  })
 })

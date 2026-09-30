@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
 import { fn } from 'storybook/test'
 import { Button } from './Button'
 
@@ -183,6 +184,44 @@ export const AsLink: Story = {
       </Button>
     </div>
   ),
+}
+
+/** A turning Evenstar replaces the label while work is in progress; the width stays the same. */
+export const Loading: Story = {
+  render: (args) => (
+    <div style={row}>
+      <Button {...args} loading>
+        Enter Imladris
+      </Button>
+      <Button {...args} loading variant="secondary">
+        Ask Elrond
+      </Button>
+      <Button {...args} loading variant="danger" frame="pointed">
+        Break the sword
+      </Button>
+    </div>
+  ),
+}
+
+function SaveButton(props: React.ComponentProps<typeof Button>) {
+  const [loading, setLoading] = useState(false)
+  return (
+    <Button
+      {...props}
+      loading={loading}
+      onClick={() => {
+        setLoading(true)
+        setTimeout(() => setLoading(false), 2000)
+      }}
+    >
+      Send the message
+    </Button>
+  )
+}
+
+/** Click to start two seconds of work. */
+export const LoadingOnClick: Story = {
+  render: (args) => <SaveButton {...args} />,
 }
 
 export const Disabled: Story = {
