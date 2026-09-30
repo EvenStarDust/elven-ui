@@ -341,12 +341,23 @@
     scale: -1 1;
   }
 
-  .button[data-frame='gate']:not([data-variant='ghost']):is(:hover, :focus-visible):not(:disabled)::before {
+  .button[data-frame='gate']:not([data-variant='ghost']):focus-visible:not(:disabled)::before {
     translate: -100% 0;
   }
 
-  .button[data-frame='gate']:not([data-variant='ghost']):is(:hover, :focus-visible):not(:disabled)::after {
+  .button[data-frame='gate']:not([data-variant='ghost']):focus-visible:not(:disabled)::after {
     translate: 100% 0;
+  }
+
+  /* Touch screens keep :hover stuck after a tap, which would leave the gate open. */
+  @media (hover: hover) {
+    .button[data-frame='gate']:not([data-variant='ghost']):hover:not(:disabled)::before {
+      translate: -100% 0;
+    }
+
+    .button[data-frame='gate']:not([data-variant='ghost']):hover:not(:disabled)::after {
+      translate: 100% 0;
+    }
   }
 
   /*

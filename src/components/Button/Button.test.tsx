@@ -136,6 +136,12 @@ describe('Button', () => {
       expect(button).toHaveAttribute('data-vine', 'bare')
     })
 
+    it('does not grow the vine on touch', () => {
+      const { container } = render(<Button frame="vine">Enter</Button>)
+      fireEvent.pointerEnter(screen.getByRole('button'), { pointerType: 'touch' })
+      expect(container.querySelector('svg')).toBeNull()
+    })
+
     it('does not change the accessible name', async () => {
       const user = userEvent.setup()
       render(<Button frame="vine">Enter</Button>)

@@ -89,7 +89,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       className={clsx(styles.button, className)}
       onPointerEnter={(event) => {
         onPointerEnter?.(event)
-        vine.grow()
+        // A tap would grow the vine only to wither it a moment later.
+        if (event.pointerType !== 'touch') vine.grow()
       }}
       onPointerLeave={(event) => {
         onPointerLeave?.(event)
