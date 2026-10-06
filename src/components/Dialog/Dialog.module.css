@@ -1,0 +1,322 @@
+@layer elven.components {
+  /*
+   * The overlay fills the screen, dims the page and centres the door. The
+   * door sits inside it, so when the door is taller than the screen the
+   * overlay scrolls and the arch is never cut through.
+   */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    overflow-y: auto;
+    padding: var(--elven-space-6) var(--elven-space-4);
+  }
+
+  /* The dimming is its own layer, so it can fade without fading the door. */
+  .overlay::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-color: var(--elven-color-scrim);
+    opacity: 0.6;
+  }
+
+  /*
+   * Radix keeps the overlay and the door mounted until their own animations
+   * end. The overlay has nothing of its own to animate, so it holds for as
+   * long as the door does.
+   */
+  .overlay[data-state='open'] {
+    animation: dialog-hold var(--elven-duration-slow);
+  }
+
+  .overlay[data-state='closed'] {
+    animation: dialog-hold var(--elven-duration-base);
+  }
+
+  .overlay[data-state='open']::before {
+    animation: dialog-dim var(--elven-duration-slow) var(--elven-ease-dissolve);
+  }
+
+  .overlay[data-state='closed']::before {
+    animation: dialog-dim var(--elven-duration-base) var(--elven-ease-dissolve) reverse both;
+  }
+
+  /*
+   * The dialog has no background of its own: it takes the shape of the door
+   * drawn behind it, an SVG at the box's measured size (see door-geometry.ts),
+   * and the page shows between the columns and the arch. The drawing also
+   * tells the content how much room to keep: --_door-* are set from it.
+   */
+  .content {
+    --_width: 38rem;
+    --_line: calc(var(--elven-ornament-width) * 1.5);
+    --_hair: var(--elven-ornament-width);
+    --_draw: calc(var(--elven-duration-slow) * 2.5);
+
+    position: relative;
+    /* Its own stacking context, so the engraving can sit behind the text but above the wall. */
+    isolation: isolate;
+    /* The library ships no reset: the door's width and height include its padding. */
+    box-sizing: border-box;
+    display: grid;
+    align-content: start;
+    gap: var(--elven-space-4);
+    inline-size: min(var(--_width), 100%);
+    min-block-size: calc(var(--_door-top, 16rem) + 8rem + var(--_door-bottom, 2.5rem));
+    padding: var(--_door-top, 16rem) var(--_door-inline, 7rem) var(--_door-bottom, 2.5rem);
+    color: var(--elven-color-text);
+    font-family: var(--elven-font-body);
+    line-height: var(--elven-line-height-normal);
+    outline: none;
+  }
+
+  .content[data-size='sm'] {
+    --_width: 28rem;
+  }
+
+  .content[data-size='lg'] {
+    --_width: 50rem;
+  }
+
+  .content[data-state='open'] {
+    animation: dialog-rise var(--elven-duration-slow) var(--elven-ease-dissolve);
+  }
+
+  .content[data-state='closed'] {
+    animation: dialog-rise var(--elven-duration-base) var(--elven-ease-dissolve) reverse both;
+  }
+
+  .engraving {
+    position: absolute;
+    z-index: -1;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    overflow: visible;
+    pointer-events: none;
+    /* Revealed from the threshold up to the cornice, as if light climbed the carving. */
+    mask: linear-gradient(to top, #000 50%, transparent 0) 0 100% / 100% 200% no-repeat;
+  }
+
+  /* Mirrored in right-to-left, so the seal's ring follows the seal to the other column. */
+  :global([dir='rtl']) .engraving {
+    scale: -1 1;
+  }
+
+  .content[data-state='open'] .engraving {
+    animation:
+      dialog-reveal var(--_draw) var(--elven-ease-dissolve) both,
+      dialog-glow calc(var(--elven-duration-slow) * 2) var(--elven-ease-dissolve) var(--_draw);
+  }
+
+  .stone {
+    fill: var(--elven-color-bg);
+  }
+
+  .doorway {
+    fill: var(--elven-color-surface);
+  }
+
+  .line,
+  .hair,
+  .carving,
+  .faint {
+    fill: none;
+    stroke: var(--elven-color-ornament);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .line {
+    stroke-width: var(--_line);
+  }
+
+  .hair,
+  .carving {
+    stroke-width: var(--_hair);
+  }
+
+  /* The door leaves of the grand frame sit behind the text, so they stay faint. */
+  .faint {
+    stroke-width: var(--_hair);
+    opacity: 0.35;
+  }
+
+  .accent {
+    fill: var(--elven-color-icon-accent);
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-xl);
+    font-weight: var(--elven-font-weight-semibold);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--elven-letter-spacing-caps);
+    line-height: var(--elven-line-height-tight);
+    text-align: center;
+  }
+
+  .description {
+    margin: 0;
+    color: var(--elven-color-text-muted);
+  }
+
+  /* A round seal crowning the end column (on the arch, it sits on the frame line). */
+  .close {
+    position: absolute;
+    inset-block-start: calc(var(--_seal-top, 17px) - var(--_seal-radius, 15px));
+    inset-inline-end: calc(var(--_seal-end, 36px) - var(--_seal-radius, 15px));
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: calc(var(--_seal-radius, 15px) * 2);
+    block-size: calc(var(--_seal-radius, 15px) * 2);
+    padding: 0;
+    border: var(--_line) solid var(--elven-color-ornament);
+    border-radius: var(--elven-radius-full);
+    background-color: var(--elven-color-surface);
+    box-shadow: inset 0 0 0 var(--elven-ornament-gap) var(--elven-color-surface),
+      inset 0 0 0 calc(var(--elven-ornament-gap) + var(--_hair)) var(--elven-color-ornament);
+    /* Red, blades and all, so the way out reads at a glance among the gold. */
+    color: var(--elven-color-danger);
+    font-size: var(--elven-font-size-md);
+    cursor: pointer;
+    transition:
+      scale var(--elven-duration-base) var(--elven-ease-dissolve),
+      filter var(--elven-duration-base) var(--elven-ease-dissolve);
+  }
+
+  /* Hovered or focused, the seal swells and glows, and the swords clash once. */
+  .close:is(:hover, :focus-visible) {
+    color: var(--elven-color-danger-hover);
+    scale: 1.1;
+    filter: drop-shadow(0 0 4px var(--elven-color-ornament-highlight));
+  }
+
+  .swords {
+    inline-size: 1em;
+    block-size: 1em;
+    overflow: visible;
+  }
+
+  .blade {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--elven-icon-stroke-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .gilding {
+    fill: currentColor;
+    fill-rule: evenodd;
+  }
+
+  /* Each sword turns about its own grip. */
+  .over,
+  .under {
+    transform-box: view-box;
+  }
+
+  .over {
+    transform-origin: 5.6px 16.8px;
+  }
+
+  .under {
+    transform-origin: 18.4px 16.8px;
+  }
+
+  .close:is(:hover, :focus-visible) .over {
+    animation: dialog-clash-over var(--elven-duration-slow) var(--elven-ease-dissolve);
+  }
+
+  .close:is(:hover, :focus-visible) .under {
+    animation: dialog-clash-under var(--elven-duration-slow) var(--elven-ease-dissolve);
+  }
+
+  .close:focus-visible {
+    outline: var(--elven-focus-width) solid var(--elven-color-focus);
+    outline-offset: var(--elven-focus-offset);
+  }
+
+  @keyframes dialog-hold {
+    from,
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes dialog-dim {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes dialog-rise {
+    from {
+      opacity: 0;
+      translate: 0 var(--elven-space-3);
+    }
+  }
+
+  /* The blades swing apart, strike back past the cross, and settle. */
+  @keyframes dialog-clash-over {
+    40% {
+      rotate: 16deg;
+    }
+
+    70% {
+      rotate: -4deg;
+    }
+  }
+
+  @keyframes dialog-clash-under {
+    40% {
+      rotate: -16deg;
+    }
+
+    70% {
+      rotate: 4deg;
+    }
+  }
+
+  @keyframes dialog-reveal {
+    from {
+      mask-position: 0 0;
+    }
+
+    to {
+      mask-position: 0 100%;
+    }
+  }
+
+  @keyframes dialog-glow {
+    50% {
+      filter: drop-shadow(0 0 3px var(--elven-color-ornament-highlight));
+    }
+  }
+
+  @media (forced-colors: active) {
+    .doorway,
+    .stone {
+      stroke: CanvasText;
+    }
+
+    :is(.line, .hair, .carving, .faint),
+    .close {
+      stroke: CanvasText;
+      border-color: CanvasText;
+    }
+
+    .accent {
+      fill: CanvasText;
+    }
+
+    .close:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

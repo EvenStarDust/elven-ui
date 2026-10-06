@@ -6,6 +6,7 @@
   [data-elven-theme='mirkwood'] {
     --elven-color-bg: var(--elven-ink-950);
     --elven-color-surface: var(--elven-ink-900);
+    --elven-color-scrim: var(--elven-ink-950);
     --elven-color-border: var(--elven-ink-700);
     --elven-color-ornament: var(--elven-gilt-500);
     --elven-color-ornament-highlight: var(--elven-gilt-300);

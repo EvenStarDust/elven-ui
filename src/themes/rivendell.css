@@ -10,6 +10,7 @@
   [data-elven-theme='rivendell'] {
     --elven-color-bg: var(--elven-parchment-100);
     --elven-color-surface: var(--elven-parchment-50);
+    --elven-color-scrim: var(--elven-sepia-900);
     --elven-color-border: var(--elven-parchment-300);
     --elven-color-ornament: var(--elven-gilt-500);
     --elven-color-ornament-highlight: var(--elven-gilt-300);
