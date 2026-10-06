@@ -8,9 +8,10 @@ const meta = {
   component: TooltipContent,
   subcomponents: { Tooltip, TooltipTrigger, TooltipProvider },
   tags: ['autodocs'],
-  args: { variant: 'ink', side: 'top', sideOffset: 8 },
+  args: { variant: 'ink', frame: 'simple', side: 'top', sideOffset: 8 },
   argTypes: {
     variant: { control: 'inline-radio', options: ['ink', 'parchment', 'label'] },
+    frame: { control: 'inline-radio', options: ['simple', 'scooped'] },
     side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
   },
   decorators: [
@@ -56,6 +57,28 @@ export const Variants: Story = {
           </TooltipContent>
         </Tooltip>
       ))}
+    </div>
+  ),
+}
+
+/** `scooped` cuts a quarter circle from each corner, as on the scooped buttons, with any variant. */
+export const Frames: Story = {
+  render: (args) => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 'calc(var(--elven-space-8) * 2) calc(var(--elven-space-8) * 3)', paddingBlockStart: 'var(--elven-space-8)' }}>
+      {(['simple', 'scooped'] as const).flatMap((frame) =>
+        (['ink', 'parchment', 'label'] as const).map((variant) => (
+          <Tooltip key={`${frame}-${variant}`} defaultOpen>
+            <TooltipTrigger asChild>
+              <Button variant="secondary">
+                {variant}, {frame}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent {...args} variant={variant} frame={frame}>
+              Write a letter
+            </TooltipContent>
+          </Tooltip>
+        )),
+      )}
     </div>
   ),
 }

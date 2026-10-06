@@ -17,6 +17,7 @@ import { clsx } from 'clsx'
 import styles from './Tooltip.module.css'
 
 export type TooltipVariant = 'ink' | 'parchment' | 'label'
+export type TooltipFrame = 'simple' | 'scooped'
 
 // Whether a TooltipProvider is already above, so a lone Tooltip can bring its own.
 const ProvidedContext = createContext(false)
@@ -132,6 +133,13 @@ export interface TooltipContentProps extends ComponentPropsWithoutRef<typeof Too
    */
   variant?: TooltipVariant
   /**
+   * The edge. `simple` has softly rounded corners; `scooped` cuts a quarter
+   * circle from each corner, as on the scooped buttons, with the gilt
+   * line following it.
+   * @default 'simple'
+   */
+  frame?: TooltipFrame
+  /**
    * Which side of the trigger the tip opens on. It moves to the other side when there is no room.
    * @default 'top'
    */
@@ -149,7 +157,7 @@ export interface TooltipContentProps extends ComponentPropsWithoutRef<typeof Too
  * trigger.
  */
 export const TooltipContent = forwardRef<ComponentRef<typeof TooltipPrimitive.Content>, TooltipContentProps>(function TooltipContent(
-  { variant = 'ink', side = 'top', sideOffset = 8, className, children, ...rest },
+  { variant = 'ink', frame = 'simple', side = 'top', sideOffset = 8, className, children, ...rest },
   ref,
 ) {
   const triggerRef = useContext(TriggerContext)
@@ -174,9 +182,12 @@ export const TooltipContent = forwardRef<ComponentRef<typeof TooltipPrimitive.Co
         collisionPadding={8}
         className={clsx(styles.content, className)}
         data-variant={variant}
+        data-frame={frame}
         {...rest}
       >
         {children}
+        {/* The scooped edge is drawn as stacked layers; this one carries the inner hairline. */}
+        {frame === 'scooped' && <span className={styles.frame} aria-hidden="true" />}
         <TooltipPrimitive.Arrow asChild width={10} height={5}>
           <span className={styles.clasp} aria-hidden="true" />
         </TooltipPrimitive.Arrow>

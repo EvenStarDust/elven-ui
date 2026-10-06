@@ -153,6 +153,8 @@ and closes with Escape.
 `variant` picks the note: `ink` (the default) is the inverse of the page and
 stands out anywhere, `parchment` is the page's own surface in a double gilt
 line, and `label` letters the parchment in small caps for a word or two.
+`frame="scooped"` cuts a quarter circle from each corner, as on the scooped
+buttons, with any of them.
 
 A tip only adds to its trigger, so an icon-only trigger still needs its own
 `aria-label`. Wrap a group of tooltips (or the whole app) in

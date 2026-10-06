@@ -88,6 +88,27 @@ describe('Tooltip', () => {
     }
   })
 
+  it('has a simple frame by default and a scooped one on request', () => {
+    const ref = createRef<HTMLDivElement>()
+    const { rerender } = render(
+      <Tooltip defaultOpen>
+        <TooltipTrigger>Map</TooltipTrigger>
+        <TooltipContent ref={ref}>Open the map</TooltipContent>
+      </Tooltip>,
+    )
+    expect(ref.current).toHaveAttribute('data-frame', 'simple')
+    rerender(
+      <Tooltip defaultOpen>
+        <TooltipTrigger>Map</TooltipTrigger>
+        <TooltipContent ref={ref} frame="scooped">
+          Open the map
+        </TooltipContent>
+      </Tooltip>,
+    )
+    expect(ref.current).toHaveAttribute('data-frame', 'scooped')
+    expect(ref.current).toHaveTextContent('Open the map')
+  })
+
   it('forwards its ref and className to the tip', () => {
     const ref = createRef<HTMLDivElement>()
     render(
