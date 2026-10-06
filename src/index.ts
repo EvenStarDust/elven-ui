@@ -26,6 +26,8 @@ export { Input } from './components/Input'
 export type { InputFrame, InputLabelPlacement, InputProps, InputSize } from './components/Input'
 export { TimePicker } from './components/TimePicker'
 export type { TimePickerLabels, TimePickerProps } from './components/TimePicker'
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './components/Tooltip'
+export type { TooltipContentProps, TooltipProps, TooltipProviderProps, TooltipTriggerProps } from './components/Tooltip'
 export type { IconProps } from './icons'
 export {
   ArrowDownIcon,
