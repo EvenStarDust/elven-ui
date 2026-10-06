@@ -2,6 +2,7 @@
 import './styles/layers.css'
 import './tokens/primitives.css'
 import './tokens/scale.css'
+import './tokens/mask-font.css'
 import './themes/rivendell.css'
 import './themes/lothlorien.css'
 import './themes/mirkwood.css'

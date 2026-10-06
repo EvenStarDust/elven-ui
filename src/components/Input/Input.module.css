@@ -376,12 +376,24 @@
     outline: none;
   }
 
+  /* Masked, the stars are gilt: the AA-safe gold for text, with the caret left in ink. */
+  .input[type='password'] {
+    font-family: var(--elven-font-password);
+    color: var(--elven-color-ornament-text);
+    caret-color: var(--elven-color-text);
+  }
+
   /* Browsers paint autofilled fields in their own colors; keep the theme's instead. */
   .input:-webkit-autofill,
   .input:autofill {
     -webkit-text-fill-color: var(--elven-color-text);
     caret-color: var(--elven-color-text);
     transition: background-color 99999s ease-out;
+  }
+
+  .input[type='password']:-webkit-autofill,
+  .input[type='password']:autofill {
+    -webkit-text-fill-color: var(--elven-color-ornament-text);
   }
 
   /* Where the field draws its own controls, hide the browser's. */

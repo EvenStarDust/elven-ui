@@ -34,7 +34,10 @@ export function App() {
 All library styles live in the `elven` cascade layer, so your own CSS always
 wins without `!important`.
 
-The library loads no fonts. It is designed for
+The library loads no fonts of its own, with one tiny exception: password
+fields draw their mask as a gilt star from a ~1 KB font built into
+`styles.css` (set `--elven-font-password: var(--elven-font-body)` for the
+browser's dots). It is designed for
 [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond)
 (weights 500, 600 and 700) and falls back to system serifs without it.
 
@@ -79,10 +82,10 @@ With `labelPlacement="inside"` the label rests in the empty field and rises
 onto the line, or into a gap in the frame, letter by letter, on focus or once
 the field has a value.
 
-Every native `type` works. `password` gets a show/hide button, `search` a
-clear button and `number` decrease/increase buttons; `controls={false}` turns
-them off. `className` and `style` go on the wrapper, everything else on the
-`<input>`.
+Every native `type` works. `password` gets a show/hide button and masks what
+is typed with gilt stars, `search` a clear button and `number`
+decrease/increase buttons; `controls={false}` turns the buttons off.
+`className` and `style` go on the wrapper, everything else on the `<input>`.
 
 ## DatePicker and TimePicker
 
