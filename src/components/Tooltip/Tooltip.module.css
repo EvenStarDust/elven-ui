@@ -1,8 +1,8 @@
 @layer elven.components {
   /*
-   * A note in ink: the theme's text color as the paper and its surface color
-   * as the writing, so it stands apart from any page it opens over. The two
-   * are a contrast pair already tested both ways round.
+   * Ink, the default: the theme's text color as the paper and its surface
+   * color as the writing, so it stands apart from any page it opens over. The
+   * two are a contrast pair already tested both ways round.
    */
   .content {
     /* Above dialogs, so a tip on a dialog's controls shows over it. */
@@ -18,6 +18,27 @@
     font-size: var(--elven-font-size-sm);
     line-height: var(--elven-line-height-normal);
     transform-origin: var(--radix-tooltip-content-transform-origin);
+  }
+
+  /* Parchment: the page's own surface, in a gilt line with a hairline inside it. */
+  .content:is([data-variant='parchment'], [data-variant='label']) {
+    padding: calc(var(--elven-space-1) + var(--elven-ornament-gap)) calc(var(--elven-space-2) + var(--elven-ornament-gap));
+    border-width: calc(var(--elven-ornament-width) * 1.5);
+    background-color: var(--elven-color-surface);
+    box-shadow:
+      inset 0 0 0 var(--elven-ornament-gap) var(--elven-color-surface),
+      inset 0 0 0 calc(var(--elven-ornament-gap) + var(--elven-ornament-width)) var(--elven-color-ornament);
+    color: var(--elven-color-text);
+  }
+
+  /* Label: the parchment lettered in small caps; small caps tire the eye beyond a few words. */
+  .content[data-variant='label'] {
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-md);
+    font-weight: var(--elven-font-weight-semibold);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--elven-letter-spacing-caps);
+    line-height: var(--elven-line-height-tight);
   }
 
   /* It comes out from its trigger: a short slide from that side as it fades in. */

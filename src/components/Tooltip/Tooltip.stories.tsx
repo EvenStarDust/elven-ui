@@ -8,8 +8,9 @@ const meta = {
   component: TooltipContent,
   subcomponents: { Tooltip, TooltipTrigger, TooltipProvider },
   tags: ['autodocs'],
-  args: { side: 'top', sideOffset: 8 },
+  args: { variant: 'ink', side: 'top', sideOffset: 8 },
   argTypes: {
+    variant: { control: 'inline-radio', options: ['ink', 'parchment', 'label'] },
     side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
   },
   decorators: [
@@ -35,6 +36,27 @@ export const Playground: Story = {
       </TooltipTrigger>
       <TooltipContent {...args}>Write a letter</TooltipContent>
     </Tooltip>
+  ),
+}
+
+/**
+ * `ink` stands apart from any page; `parchment` is the page's own surface in
+ * a double gilt line; `label` letters the parchment in small caps, for a word or two.
+ */
+export const Variants: Story = {
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 'calc(var(--elven-space-8) * 3)', paddingBlockStart: 'var(--elven-space-8)' }}>
+      {(['ink', 'parchment', 'label'] as const).map((variant) => (
+        <Tooltip key={variant} defaultOpen>
+          <TooltipTrigger asChild>
+            <Button variant="secondary">{variant}</Button>
+          </TooltipTrigger>
+          <TooltipContent {...args} variant={variant}>
+            Write a letter
+          </TooltipContent>
+        </Tooltip>
+      ))}
+    </div>
   ),
 }
 

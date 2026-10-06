@@ -66,6 +66,28 @@ describe('Tooltip', () => {
     expect(document.querySelector('[data-side]')).toHaveAttribute('data-side', 'bottom')
   })
 
+  it('is ink by default and exposes its variant', () => {
+    const ref = createRef<HTMLDivElement>()
+    const { rerender } = render(
+      <Tooltip defaultOpen>
+        <TooltipTrigger>Map</TooltipTrigger>
+        <TooltipContent ref={ref}>Open the map</TooltipContent>
+      </Tooltip>,
+    )
+    expect(ref.current).toHaveAttribute('data-variant', 'ink')
+    for (const variant of ['parchment', 'label'] as const) {
+      rerender(
+        <Tooltip defaultOpen>
+          <TooltipTrigger>Map</TooltipTrigger>
+          <TooltipContent ref={ref} variant={variant}>
+            Open the map
+          </TooltipContent>
+        </Tooltip>,
+      )
+      expect(ref.current).toHaveAttribute('data-variant', variant)
+    }
+  })
+
   it('forwards its ref and className to the tip', () => {
     const ref = createRef<HTMLDivElement>()
     render(

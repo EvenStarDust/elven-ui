@@ -16,6 +16,8 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import { clsx } from 'clsx'
 import styles from './Tooltip.module.css'
 
+export type TooltipVariant = 'ink' | 'parchment' | 'label'
+
 // Whether a TooltipProvider is already above, so a lone Tooltip can bring its own.
 const ProvidedContext = createContext(false)
 // The trigger, so the tip can take its theme along into the portal.
@@ -122,6 +124,14 @@ TooltipTrigger.displayName = 'TooltipTrigger'
 
 export interface TooltipContentProps extends ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> {
   /**
+   * `ink` is dark on light themes and light on Mirkwood, the inverse of the
+   * page, so it stands out anywhere. `parchment` is the page's own surface in
+   * a double gilt line, quieter. `label` is the parchment lettered in small
+   * caps, for one or two words.
+   * @default 'ink'
+   */
+  variant?: TooltipVariant
+  /**
    * Which side of the trigger the tip opens on. It moves to the other side when there is no room.
    * @default 'top'
    */
@@ -134,12 +144,12 @@ export interface TooltipContentProps extends ComponentPropsWithoutRef<typeof Too
 }
 
 /**
- * The tip itself: a note in ink with a gilt edge and a gilt clasp pointing
- * at its trigger. It is rendered at the end of `<body>`, in the theme of its
+ * The tip itself: a note with a gilt edge and a gilt clasp pointing at its
+ * trigger. It is rendered at the end of `<body>`, in the theme of its
  * trigger.
  */
 export const TooltipContent = forwardRef<ComponentRef<typeof TooltipPrimitive.Content>, TooltipContentProps>(function TooltipContent(
-  { side = 'top', sideOffset = 8, className, children, ...rest },
+  { variant = 'ink', side = 'top', sideOffset = 8, className, children, ...rest },
   ref,
 ) {
   const triggerRef = useContext(TriggerContext)
@@ -163,6 +173,7 @@ export const TooltipContent = forwardRef<ComponentRef<typeof TooltipPrimitive.Co
         sideOffset={sideOffset}
         collisionPadding={8}
         className={clsx(styles.content, className)}
+        data-variant={variant}
         {...rest}
       >
         {children}

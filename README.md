@@ -146,9 +146,13 @@ and closes with Escape.
   <TooltipTrigger asChild>
     <Button variant="ghost" aria-label="Write a letter"><QuillIcon /></Button>
   </TooltipTrigger>
-  <TooltipContent side="top">Write a letter</TooltipContent>
+  <TooltipContent side="top" variant="ink">Write a letter</TooltipContent>
 </Tooltip>
 ```
+
+`variant` picks the note: `ink` (the default) is the inverse of the page and
+stands out anywhere, `parchment` is the page's own surface in a double gilt
+line, and `label` letters the parchment in small caps for a word or two.
 
 A tip only adds to its trigger, so an icon-only trigger still needs its own
 `aria-label`. Wrap a group of tooltips (or the whole app) in
