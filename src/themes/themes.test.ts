@@ -49,6 +49,8 @@ const PAIRS: Array<[foreground: string, background: string, minimum: number]> = 
   ['--elven-color-text-muted', '--elven-color-surface', TEXT],
   ['--elven-color-accent-text', '--elven-color-bg', TEXT],
   ['--elven-color-accent-text', '--elven-color-surface', TEXT],
+  ['--elven-color-ornament-text', '--elven-color-bg', TEXT],
+  ['--elven-color-ornament-text', '--elven-color-surface', TEXT],
   ['--elven-color-on-accent', '--elven-color-accent', TEXT],
   ['--elven-color-on-accent', '--elven-color-accent-hover', TEXT],
   ['--elven-color-on-danger', '--elven-color-danger', TEXT],

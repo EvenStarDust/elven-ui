@@ -31,11 +31,12 @@
     --elven-umber-900: #2b210f;
     --elven-umber-950: #1f170a;
 
-    /* Gold leaf for ornaments: shade, base and the highlight of the sheen */
+    /* Gold leaf for ornaments: shade, base and the highlight of the sheen. 800 is dark enough for gilt lettering. */
     --elven-gilt-100: #fff1bf;
     --elven-gilt-300: #e6c570;
     --elven-gilt-500: #c09a45;
     --elven-gilt-700: #8c6b26;
+    --elven-gilt-800: #755819;
 
     /* Ink and bone (Mirkwood) */
     --elven-ink-700: #3a3129;

@@ -36,7 +36,7 @@ wins without `!important`.
 
 The library loads no fonts. It is designed for
 [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond)
-(weights 500 and 600) and falls back to system serifs without it.
+(weights 500, 600 and 700) and falls back to system serifs without it.
 
 ## Button
 
