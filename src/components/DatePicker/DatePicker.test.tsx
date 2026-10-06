@@ -237,6 +237,53 @@ describe('DatePicker', () => {
     expect(measure).toHaveBeenCalled()
   })
 
+  describe('when the parchment fits neither above nor below the field', () => {
+    // jsdom has no layout: a 600px tall page that can scroll, a 400px parchment, and a field placed per test.
+    const page = document.documentElement
+    let scrollBy: ReturnType<typeof vi.fn>
+
+    beforeEach(() => {
+      scrollBy = vi.fn()
+      Object.defineProperty(document, 'scrollingElement', { value: page, configurable: true })
+      Object.defineProperty(page, 'scrollBy', { value: scrollBy, configurable: true })
+      vi.spyOn(page, 'clientHeight', 'get').mockReturnValue(600)
+      vi.spyOn(page, 'scrollHeight', 'get').mockReturnValue(2000)
+      vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(400)
+    })
+    afterEach(() => {
+      vi.restoreAllMocks()
+      Reflect.deleteProperty(document, 'scrollingElement')
+      Reflect.deleteProperty(page, 'scrollBy')
+    })
+
+    const placeField = (container: HTMLElement, top: number) =>
+      vi.spyOn(container.firstElementChild as HTMLElement, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 300, 60))
+
+    it('scrolls the page just enough to open below the field', async () => {
+      const { container } = render(<DatePicker label="Council" />)
+      placeField(container, 300)
+      await open()
+      // 360 (field bottom) + 10 (gap) + 400 (parchment) + 12 (margin) - 600 (screen)
+      expect(scrollBy).toHaveBeenCalledWith({ top: 182, behavior: 'instant' })
+    })
+
+    it('never scrolls the field itself out of view', async () => {
+      const { container } = render(<DatePicker label="Council" />)
+      placeField(container, 100)
+      vi.spyOn(page, 'clientHeight', 'get').mockReturnValue(380)
+      await open()
+      // 202 would be needed, but the field's top may only rise to the 12px margin.
+      expect(scrollBy).toHaveBeenCalledWith({ top: 88, behavior: 'instant' })
+    })
+
+    it('leaves the page alone when the parchment fits above', async () => {
+      const { container } = render(<DatePicker label="Council" />)
+      placeField(container, 450)
+      await open()
+      expect(scrollBy).not.toHaveBeenCalled()
+    })
+  })
+
   it('cannot be opened when disabled', async () => {
     const user = userEvent.setup()
     render(<DatePicker label="Council" locale="en-GB" disabled />)
