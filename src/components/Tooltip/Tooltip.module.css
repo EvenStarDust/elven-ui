@@ -1,0 +1,211 @@
+@layer elven.components {
+  /*
+   * Ink, the default: the theme's text color as the paper and its surface
+   * color as the writing, so it stands apart from any page it opens over. The
+   * two are a contrast pair already tested both ways round.
+   */
+  .content {
+    /* Above dialogs, so a tip on a dialog's controls shows over it. */
+    z-index: 1100;
+    box-sizing: border-box;
+    max-inline-size: min(18rem, var(--radix-tooltip-content-available-width));
+    padding: var(--elven-space-1) var(--elven-space-2);
+    border: var(--elven-ornament-width) solid var(--elven-color-ornament);
+    border-radius: var(--elven-radius-md);
+    background-color: var(--elven-color-text);
+    color: var(--elven-color-surface);
+    font-family: var(--elven-font-body);
+    font-size: var(--elven-font-size-sm);
+    line-height: var(--elven-line-height-normal);
+    transform-origin: var(--radix-tooltip-content-transform-origin);
+  }
+
+  /* Parchment: the page's own surface, in a gilt line with a hairline inside it. */
+  .content:is([data-variant='parchment'], [data-variant='label']) {
+    padding: calc(var(--elven-space-1) + var(--elven-ornament-gap)) calc(var(--elven-space-2) + var(--elven-ornament-gap));
+    border-width: calc(var(--elven-ornament-width) * 1.5);
+    background-color: var(--elven-color-surface);
+    box-shadow:
+      inset 0 0 0 var(--elven-ornament-gap) var(--elven-color-surface),
+      inset 0 0 0 calc(var(--elven-ornament-gap) + var(--elven-ornament-width)) var(--elven-color-ornament);
+    color: var(--elven-color-text);
+  }
+
+  /* Label: the parchment lettered in small caps; small caps tire the eye beyond a few words. */
+  .content[data-variant='label'] {
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-md);
+    font-weight: var(--elven-font-weight-semibold);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--elven-letter-spacing-caps);
+    line-height: var(--elven-line-height-tight);
+  }
+
+  /*
+   * Scooped: a quarter circle cut from each corner, drawn the way the scooped
+   * buttons are. The note itself is clear, and stacked layers behind its text,
+   * all cut to the same shape, make the frame: gilt line and fill for ink;
+   * gilt line, fill, hairline and fill for parchment and label. `--_o` is each
+   * layer's distance from the outer edge, so the lines keep their thickness
+   * round the corners.
+   */
+  .content[data-frame='scooped'] {
+    --_notch: 5px;
+    --_line: calc(var(--elven-ornament-width) * 1.5);
+    --_gap: var(--elven-ornament-gap);
+    --_hair: var(--elven-ornament-width);
+    --_fill: var(--elven-color-text);
+
+    position: relative;
+    isolation: isolate;
+    padding-inline: calc(var(--elven-space-2) + var(--_notch) * 0.5);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .content[data-frame='scooped']:is([data-variant='parchment'], [data-variant='label']) {
+    --_fill: var(--elven-color-surface);
+
+    padding-inline: calc(var(--elven-space-2) + var(--elven-ornament-gap) + var(--_notch) * 0.5);
+  }
+
+  .content[data-frame='scooped']::before,
+  .content[data-frame='scooped']::after,
+  .frame,
+  .frame::before {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .content[data-frame='scooped']::before {
+    --_o: 0px;
+
+    inset: 0;
+    z-index: -4;
+    background-color: var(--elven-color-ornament);
+  }
+
+  .content[data-frame='scooped']::after {
+    --_o: var(--_line);
+
+    inset: var(--_line);
+    z-index: -3;
+    background-color: var(--_fill);
+  }
+
+  /* The inner hairline and the fill inside it, only on the double-lined parchment. */
+  .frame {
+    --_o: calc(var(--_line) + var(--_gap));
+
+    display: none;
+    inset: calc(var(--_line) + var(--_gap));
+    z-index: -2;
+    background-color: var(--elven-color-ornament);
+  }
+
+  .frame::before {
+    --_o: calc(var(--_line) + var(--_gap) + var(--_hair));
+
+    inset: var(--_hair);
+    background-color: var(--_fill);
+  }
+
+  .content:is([data-variant='parchment'], [data-variant='label']) .frame {
+    display: block;
+  }
+
+  .content[data-frame='scooped']::before,
+  .content[data-frame='scooped']::after,
+  .frame,
+  .frame::before {
+    --_r: calc(var(--_notch) + var(--_o));
+    --_near: calc(var(--_o) * -1);
+    --_far: calc(100% + var(--_o));
+
+    mask:
+      radial-gradient(circle at var(--_near) var(--_near), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 0 0 / 51% 51%
+        no-repeat,
+      radial-gradient(circle at var(--_far) var(--_near), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 100% 0 / 51% 51%
+        no-repeat,
+      radial-gradient(circle at var(--_near) var(--_far), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 0 100% / 51% 51%
+        no-repeat,
+      radial-gradient(circle at var(--_far) var(--_far), #0000 var(--_r), #000 calc(var(--_r) + 0.5px)) 100% 100% /
+        51% 51% no-repeat;
+  }
+
+  /* It comes out from its trigger: a short slide from that side as it fades in. */
+  .content[data-state='delayed-open'],
+  .content[data-state='instant-open'] {
+    animation: tooltip-in var(--elven-duration-base) var(--elven-ease-dissolve);
+  }
+
+  .content[data-state='closed'] {
+    animation: tooltip-out var(--elven-duration-fast) var(--elven-ease-dissolve) both;
+  }
+
+  .content[data-side='top'] {
+    --_from: 0 var(--elven-space-1);
+  }
+
+  .content[data-side='bottom'] {
+    --_from: 0 calc(var(--elven-space-1) * -1);
+  }
+
+  .content[data-side='left'] {
+    --_from: var(--elven-space-1) 0;
+  }
+
+  .content[data-side='right'] {
+    --_from: calc(var(--elven-space-1) * -1) 0;
+  }
+
+  /*
+   * The clasp: a small gilt diamond pinned to the edge that faces the
+   * trigger. Radix places and turns its box; the diamond sits on the edge line.
+   */
+  .clasp {
+    display: block;
+    inline-size: 7px;
+    block-size: 7px;
+    background-color: var(--elven-color-ornament);
+    rotate: 45deg;
+    translate: 1.5px -3.5px;
+  }
+
+  @keyframes tooltip-in {
+    from {
+      opacity: 0;
+      translate: var(--_from);
+    }
+  }
+
+  @keyframes tooltip-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* Forced colors drop fills, so the scooped layers give way to a plain system border. */
+    .content[data-frame='scooped'] {
+      border: 1px solid CanvasText;
+    }
+
+    .content[data-frame='scooped']::before,
+    .content[data-frame='scooped']::after,
+    .frame {
+      display: none !important;
+    }
+
+    .content {
+      border-color: CanvasText;
+    }
+
+    .clasp {
+      background-color: CanvasText;
+    }
+  }
+}

@@ -135,6 +135,32 @@ moves in and is kept there, Escape closes it and focus returns to the trigger.
 It takes the theme of its trigger into the portal. Control it with `open` and
 `onOpenChange`, and translate the seal's name with `closeLabel`.
 
+## Tooltip
+
+A short note in ink with a gilt edge and a gilt clasp pointing at its
+trigger. It opens on hover after a short delay and at once on keyboard focus,
+and closes with Escape.
+
+```tsx
+<Tooltip>
+  <TooltipTrigger asChild>
+    <Button variant="ghost" aria-label="Write a letter"><QuillIcon /></Button>
+  </TooltipTrigger>
+  <TooltipContent side="top" variant="ink">Write a letter</TooltipContent>
+</Tooltip>
+```
+
+`variant` picks the note: `ink` (the default) is the inverse of the page and
+stands out anywhere, `parchment` is the page's own surface in a double gilt
+line, and `label` letters the parchment in small caps for a word or two.
+`frame="scooped"` cuts a quarter circle from each corner, as on the scooped
+buttons, with any of them.
+
+A tip only adds to its trigger, so an icon-only trigger still needs its own
+`aria-label`. Wrap a group of tooltips (or the whole app) in
+`TooltipProvider` so that once one tip has opened, the next opens without
+waiting. The tip takes the theme of its trigger into the portal.
+
 ## Icons
 
 A set of 56 icons in the same old-world style: thin outlines that take the
