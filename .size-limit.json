@@ -1,0 +1,9 @@
+[
+  { "name": "One icon", "path": "dist/index.js", "import": "{ EvenstarIcon }", "limit": "1 kB" },
+  { "name": "Input", "path": "dist/index.js", "import": "{ Input }", "limit": "2.5 kB" },
+  { "name": "Button", "path": "dist/index.js", "import": "{ Button }", "limit": "6.5 kB" },
+  { "name": "TimePicker", "path": "dist/index.js", "import": "{ TimePicker }", "limit": "26 kB" },
+  { "name": "DatePicker", "path": "dist/index.js", "import": "{ DatePicker }", "limit": "28 kB" },
+  { "name": "Everything (JS)", "path": "dist/index.js", "import": "*", "limit": "38 kB" },
+  { "name": "styles.css", "path": "dist/elven-ui.css", "rolldown": false, "limit": "10 kB" }
+]
