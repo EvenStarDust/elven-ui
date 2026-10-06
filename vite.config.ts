@@ -32,9 +32,12 @@ export default defineConfig({
     rollupOptions: {
       external,
       output: {
-        // Bundling drops per-file directives, so mark the whole entry as client code
-        // for React Server Components (e.g. the Next.js App Router).
-        banner: "'use client';",
+        // One output file per source file, so bundlers can drop whatever a consumer
+        // doesn't import, and each file keeps its own 'use client' directive: only
+        // interactive components become client code (see docs/adr/0006).
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        entryFileNames: '[name].js',
       },
     },
     sourcemap: true,
