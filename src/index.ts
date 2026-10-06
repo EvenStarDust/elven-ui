@@ -12,6 +12,16 @@ export { Button } from './components/Button'
 export type { ButtonFrame, ButtonProps, ButtonSize, ButtonVariant, ClickEffect, VineLeaves } from './components/Button'
 export { DatePicker } from './components/DatePicker'
 export type { DatePickerLabels, DatePickerProps, Numerals, WeekStart } from './components/DatePicker'
+export { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from './components/Dialog'
+export type {
+  DialogCloseProps,
+  DialogContentProps,
+  DialogDescriptionProps,
+  DialogProps,
+  DialogSize,
+  DialogTitleProps,
+  DialogTriggerProps,
+} from './components/Dialog'
 export { Input } from './components/Input'
 export type { InputFrame, InputLabelPlacement, InputProps, InputSize } from './components/Input'
 export { TimePicker } from './components/TimePicker'
@@ -38,6 +48,7 @@ export {
   CloseIcon,
   CompassIcon,
   CopyIcon,
+  CrossedSwordsIcon,
   CrownIcon,
   DoorIcon,
   ErrorIcon,

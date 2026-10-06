@@ -11,6 +11,7 @@
   [data-elven-theme='lothlorien'] {
     --elven-color-bg: var(--elven-gold-100);
     --elven-color-surface: var(--elven-gold-50);
+    --elven-color-scrim: var(--elven-umber-950);
     --elven-color-border: var(--elven-gold-300);
     --elven-color-ornament: var(--elven-gilt-500);
     --elven-color-ornament-highlight: var(--elven-gilt-300);

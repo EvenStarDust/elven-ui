@@ -105,9 +105,39 @@ Page Down between months. Everything is English by default; pass `locale` and
 `labels` together to localise. For the manuscript look, load Uncial Antiqua
 and IM Fell English alongside Cormorant Garamond.
 
+## Dialog
+
+A modal shaped as a gilt-engraved door. The dialog has no box of its own: it
+takes the shape of the door, and the page shows between its parts. Its
+engraving is lit from the threshold up as it opens, and the close seal, a
+pair of crossed swords, crowns the end column.
+
+```tsx
+<Dialog>
+  <DialogTrigger asChild>
+    <Button>Answer the summons</Button>
+  </DialogTrigger>
+  <DialogContent frame="portal" size="md">
+    <DialogTitle>The Council of Elrond</DialogTitle>
+    <DialogDescription>Who will carry the burden south?</DialogDescription>
+    <DialogClose asChild>
+      <Button>I will take it</Button>
+    </DialogClose>
+  </DialogContent>
+</Dialog>
+```
+
+`frame` picks the door: `arch`, a plain arched panel that leaves the most room
+for content; `portal`, an arched doorway between fluted columns (the default);
+or `grand`, the portal carved, with a fanlight, a crest and panelled leaves.
+Narrow screens leave out the columns. It is a Radix Dialog underneath: focus
+moves in and is kept there, Escape closes it and focus returns to the trigger.
+It takes the theme of its trigger into the portal. Control it with `open` and
+`onOpenChange`, and translate the seal's name with `closeLabel`.
+
 ## Icons
 
-A set of 55 icons in the same old-world style: thin outlines that take the
+A set of 56 icons in the same old-world style: thin outlines that take the
 text color, each with one gold detail from the theme.
 
 ```tsx
