@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type ComponentPropsWithoutRef,
+  type CSSProperties,
   type ReactNode,
 } from 'react'
 import { clsx } from 'clsx'
@@ -15,6 +16,7 @@ import styles from './Input.module.css'
 
 export type InputSize = 'sm' | 'md' | 'lg'
 export type InputFrame = 'line' | 'box'
+export type InputLabelPlacement = 'outside' | 'inside'
 
 export interface InputProps extends Omit<ComponentPropsWithoutRef<'input'>, 'size'> {
   /**
@@ -40,6 +42,13 @@ export interface InputProps extends Omit<ComponentPropsWithoutRef<'input'>, 'siz
    * @default 'line'
    */
   frame?: InputFrame
+  /**
+   * `outside` puts the label above the field. `inside` writes it in the field
+   * while it is empty, and lifts it onto the line or into the frame once the
+   * field gains focus or a value. A `placeholder` then only shows on focus.
+   * @default 'outside'
+   */
+  labelPlacement?: InputLabelPlacement
   /** Decorative icon before the text. */
   startIcon?: ReactNode
   /** Decorative icon after the text. Replaced by the built-in controls where a type has them. */
@@ -82,6 +91,9 @@ export interface InputProps extends Omit<ComponentPropsWithoutRef<'input'>, 'siz
   incrementLabel?: string
 }
 
+// Types whose empty field still shows browser-drawn text or a widget, so an inside label can never rest over it.
+const DRAWN_TYPES = new Set(['date', 'datetime-local', 'month', 'week', 'time', 'color', 'file', 'range'])
+
 // React only notices a value set from code when the native setter is used and an input event follows.
 const setNativeValue = Object.getOwnPropertyDescriptor(globalThis.HTMLInputElement?.prototype ?? {}, 'value')?.set
 const notifyChange = (input: HTMLInputElement) => input.dispatchEvent(new Event('input', { bubbles: true }))
@@ -99,6 +111,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     error,
     size = 'md',
     frame = 'line',
+    labelPlacement = 'outside',
     startIcon,
     endIcon,
     endAction,
@@ -116,6 +129,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     readOnly,
     value,
     defaultValue,
+    placeholder,
     onInput,
     'aria-describedby': describedBy,
     'aria-invalid': ariaInvalid,
@@ -156,21 +170,43 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     notifyChange(input)
   }
 
+  const inside = labelPlacement === 'inside' && Boolean(label)
+  // A plain-text inside label is split into letters that rise one after another. Screen readers get the
+  // whole word from a hidden copy, as some read separately wrapped letters one by one.
+  const lettered = inside && typeof label === 'string'
+  const labelElement = label && (
+    <label className={clsx(styles.label, lettered && styles.lettered)} htmlFor={inputId}>
+      {lettered ? (
+        <>
+          <span className={styles.visuallyHidden}>{label}</span>
+          <span aria-hidden="true">
+            {Array.from(label, (letter, index) => (
+              <span key={index} className={styles.letter} style={{ '--_i': index } as CSSProperties}>
+                {letter}
+              </span>
+            ))}
+          </span>
+        </>
+      ) : (
+        label
+      )}
+    </label>
+  )
+
   return (
     <div
       className={clsx(styles.field, className)}
       style={style}
       data-size={size}
       data-frame={frame}
+      // Without a label there is nothing to place inside, so the field behaves as `outside`.
+      data-label-placement={inside ? 'inside' : 'outside'}
+      data-label-raised={inside && DRAWN_TYPES.has(type) ? '' : undefined}
       data-controls={builtIn}
       data-invalid={invalid || undefined}
       data-disabled={disabled || undefined}
     >
-      {label && (
-        <label className={styles.label} htmlFor={inputId}>
-          {label}
-        </label>
-      )}
+      {!inside && labelElement}
       <div className={styles.control}>
         {startIcon && (
           <span className={styles.adornment} aria-hidden="true">
@@ -186,6 +222,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           readOnly={readOnly}
           value={value}
           defaultValue={defaultValue}
+          // An inside label rests over an empty field. A blank placeholder lets the CSS tell it is empty with :placeholder-shown.
+          placeholder={inside ? (placeholder ?? ' ') : placeholder}
           onInput={(event) => {
             setTyped(event.currentTarget.value !== '')
             onInput?.(event)
@@ -195,6 +233,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           aria-describedby={clsx(describedBy, error && errorId, hint && hintId) || undefined}
           {...rest}
         />
+        {/* After the input, so the CSS can lift it from the input's state with sibling selectors. */}
+        {inside && labelElement}
         {builtIn === 'password' && (
           <button
             type="button"

@@ -75,6 +75,54 @@ describe('Input', () => {
     expect(container.firstChild).toHaveAttribute('data-frame', frame)
   })
 
+  describe('inside label', () => {
+    it('places the label outside by default', () => {
+      const { container } = render(<Input label="Name" />)
+      expect(container.firstChild).toHaveAttribute('data-label-placement', 'outside')
+    })
+
+    it('still names the field and focuses it when the label is clicked', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<Input label="Your name" labelPlacement="inside" />)
+      expect(container.firstChild).toHaveAttribute('data-label-placement', 'inside')
+      const input = screen.getByRole('textbox', { name: 'Your name' })
+      await user.click(screen.getByText('Your name'))
+      expect(input).toHaveFocus()
+    })
+
+    it('gives an empty field a blank placeholder and keeps one passed in', () => {
+      const { rerender } = render(<Input label="Name" labelPlacement="inside" />)
+      expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', ' ')
+      rerender(<Input label="Name" labelPlacement="inside" placeholder="Frodo Baggins" />)
+      expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', 'Frodo Baggins')
+    })
+
+    it('splits a text label into letters but keeps the whole word as the name', () => {
+      render(<Input label="Your name" labelPlacement="inside" />)
+      expect(screen.getByRole('textbox', { name: 'Your name' })).toBeInTheDocument()
+      expect(screen.getByText('Y').parentElement).toHaveAttribute('aria-hidden', 'true')
+    })
+
+    it('leaves a label that is not plain text whole', () => {
+      render(<Input label={<em>Your name</em>} labelPlacement="inside" />)
+      expect(screen.getByRole('textbox', { name: 'Your name' })).toBeInTheDocument()
+      expect(screen.queryByText('Y')).not.toBeInTheDocument()
+    })
+
+    it('falls back to outside without a visible label', () => {
+      const { container } = render(<Input aria-label="Name" labelPlacement="inside" />)
+      expect(container.firstChild).toHaveAttribute('data-label-placement', 'outside')
+      expect(screen.getByRole('textbox')).not.toHaveAttribute('placeholder')
+    })
+
+    it('keeps the label raised on types the browser draws text into', () => {
+      const { container, rerender } = render(<Input label="Day" type="date" labelPlacement="inside" />)
+      expect(container.firstChild).toHaveAttribute('data-label-raised')
+      rerender(<Input label="Name" labelPlacement="inside" />)
+      expect(container.firstChild).not.toHaveAttribute('data-label-raised')
+    })
+  })
+
   it('accepts typing and reports changes', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()

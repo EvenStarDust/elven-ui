@@ -12,7 +12,7 @@ export type { ButtonFrame, ButtonProps, ButtonSize, ButtonVariant, ClickEffect, 
 export { DatePicker } from './components/DatePicker'
 export type { DatePickerLabels, DatePickerProps, Numerals, WeekStart } from './components/DatePicker'
 export { Input } from './components/Input'
-export type { InputFrame, InputProps, InputSize } from './components/Input'
+export type { InputFrame, InputLabelPlacement, InputProps, InputSize } from './components/Input'
 export { TimePicker } from './components/TimePicker'
 export type { TimePickerLabels, TimePickerProps } from './components/TimePicker'
 export type { IconProps } from './icons'

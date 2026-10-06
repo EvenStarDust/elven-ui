@@ -69,10 +69,15 @@ in. On focus the line turns to gold and a light runs along it.
 ```tsx
 <Input label="Your name" hint="As written in the Red Book" />
 <Input label="Your name" frame="box" error="The doors stay shut" />
+<Input label="Your name" frame="box" labelPlacement="inside" />
 <Input label="Secret word" type="password" />
 <Input label="Search" type="search" startIcon={<SeeingStoneIcon />} />
 <Input label="Rings" type="number" min={0} max={20} />
 ```
+
+With `labelPlacement="inside"` the label rests in the empty field and rises
+onto the line, or into a gap in the frame, letter by letter, on focus or once
+the field has a value.
 
 Every native `type` works. `password` gets a show/hide button, `search` a
 clear button and `number` decrease/increase buttons; `controls={false}` turns

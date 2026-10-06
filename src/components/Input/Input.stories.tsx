@@ -15,6 +15,7 @@ const meta = {
   argTypes: {
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
     frame: { control: 'inline-radio', options: ['line', 'box'] },
+    labelPlacement: { control: 'inline-radio', options: ['outside', 'inside'] },
   },
   decorators: [
     // Fields are narrow by default; a story can ask for more room with `parameters.width`.
@@ -56,6 +57,24 @@ export const Frames: Story = {
       <Input {...args} frame="box" label="Box" hint="Click in: the light crosses the frame" />
       <Input {...args} frame="box" label="Box, invalid" defaultValue="friend" error="The doors stay shut." />
       <Input {...args} frame="box" label="Box, password" type="password" defaultValue="mellon" placeholder={undefined} />
+    </div>
+  ),
+}
+
+/**
+ * `labelPlacement="inside"` writes the label in the empty field. Click in:
+ * it rises onto the line, or into a gap in the frame, and turns gilt.
+ */
+export const LabelInside: Story = {
+  args: { labelPlacement: 'inside' },
+  render: (args) => (
+    <div style={column}>
+      <Input {...args} frame="line" label="Your name" />
+      <Input {...args} frame="box" label="Your name" />
+      <Input {...args} frame="line" label="Filled" defaultValue="Frodo Baggins" />
+      <Input {...args} frame="box" label="Filled" defaultValue="Frodo Baggins" />
+      <Input {...args} frame="box" label="With an icon" startIcon={<SeeingStoneIcon />} hint="The label starts past the icon" />
+      <Input {...args} frame="box" label="Invalid" defaultValue="friend" error="The doors stay shut." />
     </div>
   ),
 }
