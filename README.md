@@ -107,7 +107,7 @@ and IM Fell English alongside Cormorant Garamond.
 
 ## Icons
 
-A set of 55 icons in the same old-world style: thin outlines that take the
+A set of 56 icons in the same old-world style: thin outlines that take the
 text color, each with one gold detail from the theme.
 
 ```tsx

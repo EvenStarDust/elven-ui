@@ -86,6 +86,22 @@ export const BrokenSwordIcon = /* @__PURE__ */ createIcon(
   'M8.6,17.2c-0.44,0 -0.8,-0.36 -0.8,-0.8v0c0,-0.44 0.36,-0.8 0.8,-0.8h6.8c0.44,0 0.8,0.36 0.8,0.8v0c0,0.44 -0.36,0.8 -0.8,0.8z',
 )
 
+// The two swords of CrossedSwordsIcon, kept apart so the dialog's close seal
+// can swing them. The one passing under is cut where the other crosses it,
+// so the gilding never overlaps itself. Plain strings rather than an object,
+// so bundlers can drop them when unused. Internal; not exported from the package.
+export const SWORD_OVER_LINE = 'M17.99,4.41L17.29,6.51L8.73,15.07L7.33,13.67L15.89,5.11ZM6.79,15.61L4.46,17.94M2.67,18.68a1.04,1.04 0 1 0 2.09,0a1.04,1.04 0 1 0 -2.09,0z'
+export const SWORD_OVER_ACCENT = 'M17.99,4.41L17.29,6.51L8.73,15.07L7.33,13.67L15.89,5.11ZM6.17,12.5L9.9,16.23A0.88,0.88 0 0 1 8.66,17.48L4.92,13.74A0.88,0.88 0 0 1 6.17,12.5Z'
+export const SWORD_UNDER_LINE = 'M6.01,4.41L8.11,5.11L11.61,8.61L10.21,10.01L6.71,6.51ZM13.79,10.79L16.67,13.67L15.27,15.07L12.39,12.19ZM17.21,15.61L19.54,17.94M19.24,18.68a1.04,1.04 0 1 0 2.09,0a1.04,1.04 0 1 0 -2.09,0z'
+export const SWORD_UNDER_ACCENT = 'M6.01,4.41L8.11,5.11L11.61,8.61L10.21,10.01L6.71,6.51ZM13.79,10.79L16.67,13.67L15.27,15.07L12.39,12.19ZM14.1,16.23L17.83,12.5A0.88,0.88 0 0 1 19.08,13.74L15.34,17.48A0.88,0.88 0 0 1 14.1,16.23Z'
+
+/** Two swords crossed, with gilded blades. Close, or a challenge. */
+export const CrossedSwordsIcon = /* @__PURE__ */ createIcon(
+  'CrossedSwordsIcon',
+  SWORD_OVER_LINE + SWORD_UNDER_LINE,
+  SWORD_OVER_ACCENT + SWORD_UNDER_ACCENT,
+)
+
 /** An arrow coming down into an open chest. Download or save. */
 export const ChestIcon = /* @__PURE__ */ createIcon(
   'ChestIcon',

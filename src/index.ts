@@ -38,6 +38,7 @@ export {
   CloseIcon,
   CompassIcon,
   CopyIcon,
+  CrossedSwordsIcon,
   CrownIcon,
   DoorIcon,
   ErrorIcon,

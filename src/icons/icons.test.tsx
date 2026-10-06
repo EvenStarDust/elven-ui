@@ -7,7 +7,7 @@ const icons = Object.entries(exports)
 
 describe('icons', () => {
   it('exports the whole set', () => {
-    expect(icons).toHaveLength(55)
+    expect(icons).toHaveLength(56)
   })
 
   describe.each(icons)('%s', (name, Icon) => {
