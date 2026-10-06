@@ -1,0 +1,532 @@
+@layer elven.components {
+  .field {
+    --_line: calc(var(--elven-ornament-width) * 1.5);
+    --_height: var(--elven-size-control-md);
+    --_font-size: var(--elven-font-size-md);
+
+    display: grid;
+    /* Packed at the top, so fields in one row line up even when only some have a hint. */
+    align-content: start;
+    gap: var(--elven-space-1);
+    color: var(--elven-color-text);
+  }
+
+  .field[data-size='sm'] {
+    --_height: var(--elven-size-control-sm);
+    --_font-size: var(--elven-font-size-sm);
+  }
+
+  .field[data-size='lg'] {
+    --_height: var(--elven-size-control-lg);
+    --_font-size: var(--elven-font-size-lg);
+  }
+
+  .label {
+    justify-self: start;
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-lg);
+    font-weight: var(--elven-font-weight-semibold);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--elven-letter-spacing-caps);
+    line-height: var(--elven-line-height-tight);
+  }
+
+  .field {
+    /* A short band of light that travels along the gilt line when the field gains focus. */
+    --_glint: linear-gradient(90deg, transparent, var(--elven-color-ornament-highlight), transparent);
+    /* With a band 40% wide, these positions put it just off the start and just off the end. */
+    --_glint-start: -67% 0;
+    --_glint-end: 167% 0;
+    --_glint-travel: calc(var(--elven-duration-slow) * 2.5);
+  }
+
+  .control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--elven-space-2);
+    min-block-size: var(--_height);
+  }
+
+  /*
+   * Line: the ruled line the text is written on. It is the field's only
+   * boundary, so it uses the muted text color, which meets 3:1 on every surface.
+   */
+  .field[data-frame='line'] .control {
+    border-block-end: var(--_line) solid var(--elven-color-text-muted);
+  }
+
+  /*
+   * On focus a gilt line is drawn over the ruled line, exactly where the
+   * border is, like ink following a quill, and the light runs along it to the
+   * end. The line itself uses the darker icon gold so the focus indicator
+   * keeps enough contrast.
+   */
+  .field[data-frame='line'] .control::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: calc(var(--_line) * -1);
+    block-size: calc(var(--_line) + 0.5px);
+    background: var(--_glint) var(--_glint-start) / 40% 100% no-repeat;
+    background-color: var(--elven-color-icon-accent);
+    scale: 0 1;
+    transform-origin: 0 50%;
+    transition: scale var(--elven-duration-slow) var(--elven-ease-dissolve);
+    pointer-events: none;
+  }
+
+  :global([dir='rtl']) .field[data-frame='line'] .control::after {
+    transform-origin: 100% 50%;
+  }
+
+  .field[data-frame='line'] .control:focus-within::after {
+    scale: 1 1;
+    background-position: var(--_glint-end);
+    transition:
+      scale var(--elven-duration-slow) var(--elven-ease-dissolve),
+      background-position var(--_glint-travel) var(--elven-ease-dissolve);
+  }
+
+  /*
+   * Box: a border on all four sides. The border is painted as a background on
+   * the border box, so the same travelling light can cross the whole frame.
+   * The background color shows through the transparent border as its color.
+   */
+  .field[data-frame='box'] .control {
+    padding-inline: var(--elven-space-3);
+    border: var(--_line) solid transparent;
+    border-radius: var(--elven-radius-xl);
+    background:
+      linear-gradient(var(--elven-color-surface), var(--elven-color-surface)) padding-box,
+      var(--_glint) var(--_glint-start) / 40% 100% no-repeat border-box;
+    background-color: var(--elven-color-text-muted);
+    transition: background-color var(--elven-duration-base) var(--elven-ease-dissolve);
+  }
+
+  .field[data-frame='box'] .control:focus-within {
+    background-color: var(--elven-color-icon-accent);
+    background-position:
+      0 0,
+      var(--_glint-end);
+    transition:
+      background-color var(--elven-duration-base) var(--elven-ease-dissolve),
+      background-position var(--_glint-travel) var(--elven-ease-dissolve);
+  }
+
+  /*
+   * Inside label: it rests in the empty field like a placeholder and is
+   * lifted onto the line, or into a gap in the frame, once the field has
+   * focus or a value. The label comes after the input in the DOM, so its
+   * state is read from the input with sibling selectors and needs no JS.
+   */
+  .field[data-label-placement='inside'] {
+    --_label-scale: 0.9;
+    /*
+     * Small caps sit low in their line box: their visible centre is this far
+     * (in em) below the box's centre. Measured for Cormorant Garamond, so the
+     * label lands on the border by its letters rather than by its box.
+     */
+    --_caps-drop: 0.095;
+    --_label-font-size: calc(var(--_font-size) * 1.25);
+    --_label-raised-height: calc(var(--_label-font-size) * var(--elven-line-height-tight) * var(--_label-scale));
+  }
+
+  /* The lifted label leaves the grid, so the field keeps room for it above the control. */
+  .field[data-label-placement='inside'][data-frame='line'] {
+    padding-block-start: calc(var(--_label-raised-height) + var(--elven-space-1));
+  }
+
+  .field[data-label-placement='inside'][data-frame='box'] {
+    padding-block-start: calc(var(--_label-raised-height) / 2);
+  }
+
+  .field[data-label-placement='inside'] .label {
+    /* Lines the resting label up with the typed text: past the input's padding and a start icon. */
+    --_label-start: var(--elven-space-1);
+    --_label-icon: 0px;
+
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: calc(var(--_label-start) + var(--_label-icon));
+    max-inline-size: calc(100% - var(--_label-start) - var(--_label-icon));
+    overflow: hidden;
+    font-size: var(--_label-font-size);
+    color: var(--elven-color-text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Centred by its letters, not its box: see --_caps-drop. */
+    translate: 0 calc(-50% - var(--_caps-drop) * 1em);
+    transform-origin: 0 50%;
+    pointer-events: none;
+    transition-property: inset-block-start, inset-inline-start, translate, scale, color, font-weight;
+    transition-duration: var(--elven-duration-base);
+    transition-timing-function: var(--elven-ease-dissolve);
+  }
+
+  :global([dir='rtl']) .field[data-label-placement='inside'] .label {
+    transform-origin: 100% 50%;
+  }
+
+  .field[data-label-placement='inside'] .adornment ~ .label {
+    --_label-icon: calc(var(--_font-size) * 1.25 + var(--elven-space-2));
+  }
+
+  /*
+   * In the box the label crosses the top border. It is filled with the
+   * surface color from the top of the border down, which cuts a gap in the
+   * border behind the text. Above the border it stays clear, so whatever is
+   * behind the field shows. The border sits --_caps-drop below the label's
+   * centre (see above); the line is thinner in label units while scaled.
+   */
+  .field[data-label-placement='inside'][data-frame='box'] .label {
+    --_label-start: var(--elven-space-3);
+
+    padding-inline: var(--elven-space-1);
+    background: linear-gradient(
+      transparent calc(50% + var(--_caps-drop) * 1em - var(--_line) / 2 / var(--_label-scale)),
+      var(--elven-color-surface) 0
+    );
+  }
+
+  .field[data-label-placement='inside'] .input:focus ~ .label,
+  .field[data-label-placement='inside'] .input:not(:placeholder-shown) ~ .label,
+  .field[data-label-placement='inside'][data-label-raised] .label {
+    --_label-icon: 0px;
+
+    scale: var(--_label-scale);
+    color: var(--elven-color-text);
+    font-weight: var(--elven-font-weight-bold);
+  }
+
+  /* Kept apart: a browser that doesn't know a selector drops the whole list. */
+  .field[data-label-placement='inside'] .input:-webkit-autofill ~ .label {
+    --_label-icon: 0px;
+
+    scale: var(--_label-scale);
+    color: var(--elven-color-text);
+    font-weight: var(--elven-font-weight-bold);
+  }
+
+  /* On the line: the lifted label sits above it, flush with the start like an outside label. */
+  .field[data-label-placement='inside'][data-frame='line'] .input:focus ~ .label,
+  .field[data-label-placement='inside'][data-frame='line'] .input:not(:placeholder-shown) ~ .label,
+  .field[data-label-raised][data-frame='line'] .label {
+    --_label-start: 0px;
+
+    inset-block-start: 0;
+    translate: 0 calc(-50% * (1 + var(--_label-scale)) - var(--elven-space-1));
+  }
+
+  .field[data-label-placement='inside'][data-frame='line'] .input:-webkit-autofill ~ .label {
+    --_label-start: 0px;
+
+    inset-block-start: 0;
+    translate: 0 calc(-50% * (1 + var(--_label-scale)) - var(--elven-space-1));
+  }
+
+  /* In the box: centred on the top border. */
+  .field[data-label-placement='inside'][data-frame='box'] .input:focus ~ .label,
+  .field[data-label-placement='inside'][data-frame='box'] .input:not(:placeholder-shown) ~ .label,
+  .field[data-label-raised][data-frame='box'] .label {
+    inset-block-start: calc(var(--_line) / -2);
+    translate: 0 calc(-50% - var(--_caps-drop) * var(--_label-scale) * 1em);
+  }
+
+  .field[data-label-placement='inside'][data-frame='box'] .input:-webkit-autofill ~ .label {
+    inset-block-start: calc(var(--_line) / -2);
+    translate: 0 calc(-50% - var(--_caps-drop) * var(--_label-scale) * 1em);
+  }
+
+  /*
+   * Focused, the label turns gilt along with the line. The ornament text gold
+   * is darker than the line's so the label still meets AA as text.
+   */
+  .field[data-label-placement='inside'] .input:focus ~ .label {
+    color: var(--elven-color-ornament-text);
+  }
+
+  .field[data-label-placement='inside'][data-invalid] .input:focus ~ .label {
+    color: var(--elven-color-danger);
+  }
+
+  /*
+   * Lettered label: instead of the word moving as one, each letter rises and
+   * shrinks in turn, a beat after the one before, as if written into place.
+   * The label box stays where it rests and only the letters travel, each
+   * cutting its own share of the gap in the frame as it arrives.
+   */
+  .field[data-label-placement='inside'] .label.lettered {
+    --_letter-step: calc(var(--elven-duration-base) / 8);
+    /*
+     * The letters hang from the top of the label box (vertical-align: top), so
+     * a shrinking letter doesn't drift towards the baseline. With L the label
+     * size and l the raised letter size, a letter starts with its top at
+     * H/2 - L·lh/2 in the control, and has to travel this far to sit just above the line.
+     */
+    --_letter-size: calc(var(--_label-font-size) * var(--_label-scale));
+    --_label-rise: calc(
+      var(--_label-font-size) * var(--elven-line-height-tight) / 2 - var(--_height) / 2 - var(--elven-space-1) -
+        var(--_letter-size) * var(--elven-line-height-tight)
+    );
+
+    overflow: visible;
+    padding-inline: 0;
+    background: none;
+    /* The box stays centred; the letters carry the optical shift themselves. */
+    translate: 0 -50%;
+    /* The letters carry their own color change, staggered like their movement. */
+    transition-property: inset-inline-start;
+  }
+
+  .field[data-label-placement='inside'][data-frame='box'] .label.lettered {
+    /* Onto the border: the visible middle of the small caps on the middle of the line. */
+    --_label-rise: calc(
+      var(--_label-font-size) * var(--elven-line-height-tight) / 2 - (var(--_height) + var(--_line)) / 2 -
+        var(--_letter-size) * (var(--elven-line-height-tight) / 2 + var(--_caps-drop))
+    );
+  }
+
+  .field[data-label-placement='inside'] .input:focus ~ .label.lettered,
+  .field[data-label-placement='inside'] .input:not(:placeholder-shown) ~ .label.lettered,
+  .field[data-label-placement='inside'][data-label-raised] .label.lettered {
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    scale: none;
+  }
+
+  .field[data-label-placement='inside'] .input:-webkit-autofill ~ .label.lettered {
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    scale: none;
+  }
+
+  .letter {
+    display: inline-block;
+    vertical-align: top;
+    translate: 0 calc(var(--_caps-drop) * -1em);
+    /* Keeps spaces as wide as they are in the word. */
+    white-space: pre;
+    transition-property: translate, font-size, color, font-weight;
+    transition-duration: var(--elven-duration-slow);
+    transition-timing-function: var(--elven-ease-dissolve);
+    transition-delay: calc(var(--_i) * var(--_letter-step));
+  }
+
+  .field[data-label-placement='inside'] .input:focus ~ .label .letter,
+  .field[data-label-placement='inside'] .input:not(:placeholder-shown) ~ .label .letter,
+  .field[data-label-placement='inside'][data-label-raised] .label .letter {
+    translate: 0 var(--_label-rise);
+    font-size: calc(var(--_label-font-size) * var(--_label-scale));
+  }
+
+  .field[data-label-placement='inside'] .input:-webkit-autofill ~ .label .letter {
+    translate: 0 var(--_label-rise);
+    font-size: calc(var(--_label-font-size) * var(--_label-scale));
+  }
+
+  .field[data-label-placement='inside'][data-frame='box'] .letter {
+    /* Letters move unscaled, so the border is simply --_caps-drop below each one's centre. */
+    background: linear-gradient(
+      transparent calc(50% + var(--_caps-drop) * 1em - var(--_line) / 2),
+      var(--elven-color-surface) 0
+    );
+  }
+
+  .field[data-label-placement='inside'][data-frame='box'] .letter:first-child {
+    padding-inline-start: var(--elven-space-1);
+  }
+
+  .field[data-label-placement='inside'][data-frame='box'] .letter:last-child {
+    padding-inline-end: var(--elven-space-1);
+  }
+
+  .visuallyHidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* While the label rests in the field, a placeholder would sit on top of it. */
+  /* On focus it waits for the label to leave, so the two never cross. */
+  .field[data-label-placement='inside'] .input::placeholder {
+    transition: color var(--elven-duration-base) var(--elven-ease-dissolve) var(--elven-duration-slow);
+  }
+
+  .field[data-label-placement='inside'] .input:not(:focus)::placeholder {
+    color: transparent;
+    transition-delay: 0s;
+  }
+
+  .input {
+    flex: 1;
+    min-inline-size: 0;
+    padding: var(--elven-space-1) var(--elven-space-1);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font-family: var(--elven-font-body);
+    font-size: var(--_font-size);
+    line-height: var(--elven-line-height-normal);
+    /* The gilt line is the focus indicator. */
+    outline: none;
+  }
+
+  /* Masked, the stars are gilt: the AA-safe gold for text, with the caret left in ink. */
+  .input[type='password'] {
+    font-family: var(--elven-font-password);
+    color: var(--elven-color-ornament-text);
+    caret-color: var(--elven-color-text);
+  }
+
+  /* Browsers paint autofilled fields in their own colors; keep the theme's instead. */
+  .input:-webkit-autofill,
+  .input:autofill {
+    -webkit-text-fill-color: var(--elven-color-text);
+    caret-color: var(--elven-color-text);
+    transition: background-color 99999s ease-out;
+  }
+
+  .input[type='password']:-webkit-autofill,
+  .input[type='password']:autofill {
+    -webkit-text-fill-color: var(--elven-color-ornament-text);
+  }
+
+  /* Where the field draws its own controls, hide the browser's. */
+  .field[data-controls='number'] .input {
+    appearance: textfield;
+  }
+
+  .field[data-controls='number'] .input::-webkit-inner-spin-button,
+  .field[data-controls='number'] .input::-webkit-outer-spin-button,
+  .field[data-controls='search'] .input::-webkit-search-cancel-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  .input::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  .input::placeholder {
+    color: var(--elven-color-text-muted);
+    opacity: 1;
+  }
+
+  .adornment {
+    display: inline-flex;
+    flex: none;
+    color: var(--elven-color-text-muted);
+    font-size: calc(var(--_font-size) * 1.25);
+  }
+
+  .actions {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .action,
+  .actions > button {
+    display: inline-flex;
+    flex: none;
+    padding: var(--elven-space-1);
+    border: 0;
+    border-radius: var(--elven-radius-lg);
+    background: transparent;
+    color: var(--elven-color-text-muted);
+    font-size: calc(var(--_font-size) * 1.25);
+    cursor: pointer;
+  }
+
+  .action:hover:not(:disabled),
+  .actions > button:hover:not(:disabled) {
+    color: var(--elven-color-text);
+  }
+
+  .action:focus-visible,
+  .actions > button:focus-visible {
+    outline: var(--elven-focus-width) solid var(--elven-color-focus);
+    outline-offset: var(--elven-focus-offset);
+  }
+
+  .stepper {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .action:disabled,
+  .actions > button:disabled {
+    cursor: not-allowed;
+  }
+
+  .hint,
+  .error {
+    margin: 0;
+    line-height: var(--elven-line-height-normal);
+  }
+
+  .hint {
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-md);
+    font-style: italic;
+    color: var(--elven-color-text-muted);
+  }
+
+  .error {
+    --elven-icon-accent: currentColor;
+
+    display: flex;
+    align-items: center;
+    gap: var(--elven-space-1);
+    font-family: var(--elven-font-body);
+    font-size: var(--elven-font-size-sm);
+    color: var(--elven-color-danger);
+  }
+
+  /* Invalid: the line or border, and its focus state, turn to the danger color. */
+  .field[data-invalid][data-frame='line'] .control {
+    border-block-end-color: var(--elven-color-danger);
+  }
+
+  .field[data-invalid][data-frame='line'] .control::after,
+  .field[data-invalid][data-frame='box'] .control {
+    background-color: var(--elven-color-danger);
+  }
+
+  .field[data-disabled] {
+    opacity: 0.5;
+  }
+
+  .field[data-disabled] .input {
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    .field[data-frame='line'] .control {
+      border-block-end-color: FieldText;
+    }
+
+    .field[data-frame='box'] .control {
+      border-color: FieldText;
+    }
+
+    .control::after {
+      display: none;
+    }
+
+    /* Backgrounds are forced to Canvas here, so the gap in the border has to be cut with it explicitly. */
+    .field[data-label-placement='inside'][data-frame='box'] .label:not(.lettered),
+    .field[data-label-placement='inside'][data-frame='box'] .letter {
+      background: Canvas;
+    }
+
+    .control:focus-within {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
+}

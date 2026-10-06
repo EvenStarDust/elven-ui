@@ -34,9 +34,12 @@ export function App() {
 All library styles live in the `elven` cascade layer, so your own CSS always
 wins without `!important`.
 
-The library loads no fonts. It is designed for
+The library loads no fonts of its own, with one tiny exception: password
+fields draw their mask as a gilt star from a ~1 KB font built into
+`styles.css` (set `--elven-font-password: var(--elven-font-body)` for the
+browser's dots). It is designed for
 [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond)
-(weights 500 and 600) and falls back to system serifs without it.
+(weights 500, 600 and 700) and falls back to system serifs without it.
 
 ## Button
 
@@ -60,6 +63,47 @@ The library loads no fonts. It is designed for
 | `asChild`     | `boolean`, renders the child element (such as a link) as the button   | `false`     |
 
 Every animation respects `prefers-reduced-motion`.
+
+## Input
+
+A text field written on a ruled line, with its label, hint and error built
+in. On focus the line turns to gold and a light runs along it.
+
+```tsx
+<Input label="Your name" hint="As written in the Red Book" />
+<Input label="Your name" frame="box" error="The doors stay shut" />
+<Input label="Your name" frame="box" labelPlacement="inside" />
+<Input label="Secret word" type="password" />
+<Input label="Search" type="search" startIcon={<SeeingStoneIcon />} />
+<Input label="Rings" type="number" min={0} max={20} />
+```
+
+With `labelPlacement="inside"` the label rests in the empty field and rises
+onto the line, or into a gap in the frame, letter by letter, on focus or once
+the field has a value.
+
+Every native `type` works. `password` gets a show/hide button and masks what
+is typed with gilt stars, `search` a clear button and `number`
+decrease/increase buttons; `controls={false}` turns the buttons off.
+`className` and `style` go on the wrapper, everything else on the `<input>`.
+
+## DatePicker and TimePicker
+
+The browser's own date and time pickers cannot be themed, so these unroll
+their own: a page of a medieval calendar on a scroll of parchment.
+
+```tsx
+<DatePicker label="Day of the council" defaultValue="2026-09-30" />
+<DatePicker label="Day" min="2026-09-10" max="2026-10-05" numerals="roman" />
+<TimePicker label="Hour of departure" defaultValue="09:30" minuteStep={15} />
+```
+
+Values are strings like the native inputs' (`YYYY-MM-DD`, `HH:MM`), reported
+through `onValueChange` and submitted with forms under `name`. Click the month
+to choose among months and years. Arrow keys move between days, Page Up and
+Page Down between months. Everything is English by default; pass `locale` and
+`labels` together to localise. For the manuscript look, load Uncial Antiqua
+and IM Fell English alongside Cormorant Garamond.
 
 ## Icons
 

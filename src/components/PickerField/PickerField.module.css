@@ -1,0 +1,53 @@
+@layer elven.components {
+  /* Carries a theme attribute for its variables, but is only a transparent holder for the parchment. */
+  .popover {
+    z-index: 1000;
+    background-color: transparent;
+    outline: none;
+    transform-origin: var(--radix-popover-content-transform-origin);
+  }
+
+  /*
+   * When neither side of the field has room, Radix opens on the roomier one
+   * but never moves the parchment along that axis, so it runs off the screen.
+   * Radix reports the room left on the chosen side; slide back by whatever
+   * doesn't fit (100% is the parchment's own height), even if that covers the field.
+   */
+  .popover[data-side='top'] {
+    translate: 0 max(0px, 100% - var(--radix-popover-content-available-height));
+  }
+
+  .popover[data-side='bottom'] {
+    translate: 0 min(0px, var(--radix-popover-content-available-height) - 100%);
+  }
+
+  .popover[data-state='open'] {
+    animation: picker-open var(--elven-duration-base) var(--elven-ease-dissolve);
+  }
+
+  /* Closing: the parchment rolls itself back up, then the rolls fade away. */
+  .popover[data-state='closed'] {
+    animation: picker-close calc(var(--elven-duration-slow) * 1.25) var(--elven-ease-dissolve);
+  }
+
+  @keyframes picker-open {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes picker-close {
+    0%,
+    80% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+}
