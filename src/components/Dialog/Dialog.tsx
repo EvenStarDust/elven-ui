@@ -209,6 +209,10 @@ export const DialogContent = forwardRef<ComponentRef<typeof DialogPrimitive.Cont
                 <path className={styles.gilding} d={SWORD_UNDER_ACCENT} />
               </g>
             </svg>
+            {/* The swords are no universal sign for closing, so the seal names itself on hover and focus. */}
+            <span className={styles.note} aria-hidden="true">
+              {closeLabel}
+            </span>
           </DialogPrimitive.Close>
         </DialogPrimitive.Content>
       </DialogPrimitive.Overlay>

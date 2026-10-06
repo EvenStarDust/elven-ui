@@ -186,14 +186,68 @@
     cursor: pointer;
     transition:
       scale var(--elven-duration-base) var(--elven-ease-dissolve),
-      filter var(--elven-duration-base) var(--elven-ease-dissolve);
+      box-shadow var(--elven-duration-base) var(--elven-ease-dissolve);
   }
 
   /* Hovered or focused, the seal swells and glows, and the swords clash once. */
   .close:is(:hover, :focus-visible) {
     color: var(--elven-color-danger-hover);
     scale: 1.1;
-    filter: drop-shadow(0 0 4px var(--elven-color-ornament-highlight));
+    box-shadow:
+      inset 0 0 0 var(--elven-ornament-gap) var(--elven-color-surface),
+      inset 0 0 0 calc(var(--elven-ornament-gap) + var(--_hair)) var(--elven-color-ornament),
+      0 0 8px var(--elven-color-ornament-highlight);
+  }
+
+  /*
+   * The seal's name, in the same ink note as Tooltip, opening under it. The
+   * seal never moves, so CSS can place it; no positioning library needed,
+   * and Escape still closes the dialog at the first press.
+   */
+  .note {
+    position: absolute;
+    inset-block-start: calc(100% + var(--elven-space-2));
+    /* Centred under the seal in either direction, without physical left/right. */
+    inset-inline: -100vw;
+    inline-size: max-content;
+    margin-inline: auto;
+    padding: var(--elven-space-1) var(--elven-space-2);
+    border: var(--elven-ornament-width) solid var(--elven-color-ornament);
+    border-radius: var(--elven-radius-md);
+    background-color: var(--elven-color-text);
+    color: var(--elven-color-surface);
+    font-family: var(--elven-font-body);
+    font-size: var(--elven-font-size-sm);
+    line-height: var(--elven-line-height-normal);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: 50% 0;
+    pointer-events: none;
+    transition:
+      opacity var(--elven-duration-base) var(--elven-ease-dissolve),
+      visibility var(--elven-duration-base);
+  }
+
+  /* The clasp: a gilt diamond on the edge facing the seal. */
+  .note::before {
+    content: '';
+    position: absolute;
+    inset-block-start: -4px;
+    inset-inline: 0;
+    inline-size: 7px;
+    block-size: 7px;
+    margin-inline: auto;
+    background-color: var(--elven-color-ornament);
+    rotate: 45deg;
+  }
+
+  .close:is(:hover, :focus-visible) .note {
+    opacity: 1;
+    visibility: visible;
+    /* Undoes the seal's swell, so the note keeps the size of every other tooltip. */
+    scale: calc(1 / 1.1);
+    transition-delay: var(--elven-duration-slow);
   }
 
   .swords {
@@ -313,6 +367,14 @@
 
     .accent {
       fill: CanvasText;
+    }
+
+    .note {
+      border-color: CanvasText;
+    }
+
+    .note::before {
+      background-color: CanvasText;
     }
 
     .close:focus-visible {
