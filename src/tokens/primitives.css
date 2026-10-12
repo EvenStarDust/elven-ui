@@ -9,6 +9,7 @@
     /* Parchment and sepia ink (Rivendell) */
     --elven-parchment-50: #f5efe3;
     --elven-parchment-100: #ede5d5;
+    --elven-parchment-200: #e3d9c6;
     --elven-parchment-300: #d3c6ac;
     --elven-sepia-700: #625547;
     --elven-sepia-900: #2d251b;
@@ -22,6 +23,7 @@
     /* Gold leaf and umber (Lothlórien) */
     --elven-gold-50: #f3e9d0;
     --elven-gold-100: #eaddbf;
+    --elven-gold-200: #ded0ac;
     --elven-gold-300: #c9b283;
     --elven-straw-200: #f0deae;
     --elven-gold-400: #c89e40;
@@ -40,6 +42,7 @@
 
     /* Ink and bone (Mirkwood) */
     --elven-ink-700: #3a3129;
+    --elven-ink-800: #2a241e;
     --elven-ink-900: #1e1914;
     --elven-ink-950: #14110e;
     --elven-bone-100: #e0d7c4;
@@ -90,5 +93,15 @@
     --elven-ember-400: #db7862;
     --elven-moss-300: #a3b58e;
     --elven-moss-700: #4e6636;
+    --elven-moss-800: #3f5a2a;
+    --elven-moss-900: #1f2a1a;
+    --elven-ember-950: #331914;
+    /* Ochre and saffron for warnings; each theme picks the one furthest from its accent */
+    --elven-ochre-300: #e0b04f;
+    --elven-ochre-700: #7d5a12;
+    --elven-ochre-800: #6b4c0c;
+    --elven-ochre-950: #2f2611;
+    --elven-saffron-700: #8f4a0e;
+    --elven-saffron-800: #7a3e0a;
   }
 }

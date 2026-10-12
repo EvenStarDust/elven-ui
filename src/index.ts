@@ -8,6 +8,8 @@ import './themes/lothlorien.css'
 import './themes/mirkwood.css'
 
 // Public API. Every export is listed explicitly.
+export { Badge } from './components/Badge'
+export type { BadgeAppearance, BadgeProps, BadgeShape, BadgeSize, BadgeVariant } from './components/Badge'
 export { Button } from './components/Button'
 export type { ButtonFrame, ButtonProps, ButtonSize, ButtonVariant, ClickEffect, VineLeaves } from './components/Button'
 export { DatePicker } from './components/DatePicker'
