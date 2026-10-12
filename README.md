@@ -161,6 +161,28 @@ A tip only adds to its trigger, so an icon-only trigger still needs its own
 `TooltipProvider` so that once one tip has opened, the next opens without
 waiting. The tip takes the theme of its trigger into the portal.
 
+## Badge
+
+A short label stitched on a small patch with a gilt edge, for statuses,
+counts and categories.
+
+```tsx
+<Badge>Sealed</Badge>
+<Badge variant="warning" size="sm">Orcs near</Badge>
+<Badge variant="danger" appearance="solid">Lost</Badge>
+<Badge shape="shield">Sealed</Badge>
+```
+
+| Prop         | Values                                          | Default   |
+| ------------ | ----------------------------------------------- | --------- |
+| `variant`    | `neutral` `accent` `success` `warning` `danger` | `neutral` |
+| `appearance` | `soft` (a pale tint) `solid` (the full tone)    | `soft`    |
+| `shape`      | `ribbon` `shield` `round` `scalloped`           | `ribbon`  |
+| `size`       | `sm` `md`                                       | `md`      |
+
+Let the label say what it means on its own: the color only reinforces it.
+`--elven-ornament-width: 0` removes the gilt edge and the stitching.
+
 ## Icons
 
 A set of 56 icons in the same old-world style: thin outlines that take the

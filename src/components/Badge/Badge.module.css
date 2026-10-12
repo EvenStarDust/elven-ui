@@ -1,0 +1,189 @@
+@layer elven.components {
+  .badge {
+    /*
+     * Private custom properties (leading underscore). Variants set the colors,
+     * sizes set the geometry, shapes set the outline, and the rules below
+     * consume all three.
+     */
+    --_fill: var(--elven-color-neutral-subtle);
+    --_ink: var(--elven-color-text);
+    --_height: 1.5rem;
+    --_edge: var(--elven-ornament-width);
+    --_end: var(--elven-space-2);
+    --_clip: none;
+    --_mask: none;
+    /* The stitching sits this far inside the edge. */
+    --_stitch-inset: calc(var(--_edge) + 2px);
+
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--_height);
+    padding-inline: var(--_end);
+    vertical-align: middle;
+
+    /*
+     * Three layers in one outline: the element itself is the gilt edge, ::before
+     * lays the fill inside it and ::after stitches a dashed thread around it.
+     */
+    background-color: var(--elven-color-ornament);
+    clip-path: var(--_clip);
+    -webkit-mask: var(--_mask);
+    mask: var(--_mask);
+    color: var(--_ink);
+
+    font-family: var(--elven-font-display);
+    font-size: var(--elven-font-size-md);
+    font-weight: var(--elven-font-weight-bold);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--elven-letter-spacing-caps);
+    line-height: var(--elven-line-height-tight);
+    white-space: nowrap;
+  }
+
+  .badge::before,
+  .badge::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    /* Percentage radii resolve against each layer's own box, so the outline scales down with it. */
+    border-radius: inherit;
+  }
+
+  .badge::before {
+    inset: var(--_edge);
+    background-color: var(--_fill);
+    clip-path: var(--_clip);
+    -webkit-mask: var(--_mask);
+    mask: var(--_mask);
+  }
+
+  /* Decorative thread, so it takes the ink at half strength; the ornament width turns it off. */
+  .badge::after {
+    inset: var(--_stitch-inset);
+    border: var(--elven-ornament-width) dashed currentColor;
+    opacity: 0.5;
+  }
+
+  .label {
+    /* Same optical lift as the Button label: small caps sit low in the line box. */
+    translate: 0 -0.07em;
+    /* Letter spacing also trails the last letter; mirror it on the start so the text centers. */
+    padding-inline-start: var(--elven-letter-spacing-caps);
+  }
+
+  /* Ribbon: swallowtail ends. Both are cut the same way, so it needs no mirroring under dir="rtl". */
+  .badge[data-shape='ribbon'] {
+    --_notch: calc(var(--_height) * 0.3);
+    /* The notches eat into the ends, so the text keeps clear of them. */
+    --_end: calc(var(--_notch) + var(--elven-space-2));
+    --_clip: polygon(0 0, 100% 0, calc(100% - var(--_notch)) 50%, 100% 100%, 0 100%, var(--_notch) 50%);
+  }
+
+  /* A flat-topped shield, rounded below. The extra space underneath keeps the text clear of the curve. */
+  .badge[data-shape='shield'] {
+    --_end: var(--elven-space-3);
+
+    padding-block-end: calc(var(--_height) * 0.2);
+    border-end-start-radius: 50% 60%;
+    border-end-end-radius: 50% 60%;
+  }
+
+  .badge[data-shape='round'] {
+    --_end: calc(var(--_height) * 0.5);
+
+    border-radius: var(--elven-radius-full);
+  }
+
+  /* Scalloped: small round bites along the top and bottom edges, like a pinked patch. */
+  .badge[data-shape='scalloped'] {
+    --_bite: calc(var(--_height) * 0.1);
+    --_mask:
+      radial-gradient(circle at 50% 0, transparent var(--_bite), #000 calc(var(--_bite) + 0.5px)) top / calc(var(--_bite) * 4) 51% round no-repeat,
+      radial-gradient(circle at 50% 100%, transparent var(--_bite), #000 calc(var(--_bite) + 0.5px)) bottom / calc(var(--_bite) * 4) 51% round no-repeat;
+    --_stitch-inset: calc(var(--_edge) + var(--_bite) + 2px);
+
+    /* The bites push the thread inward, so the text needs the same room to stay clear of it. */
+    padding-block: var(--_bite);
+  }
+
+  /* The ribbon's notches and the scallops would cut through a thread along the ends. */
+  .badge[data-shape='ribbon']::after,
+  .badge[data-shape='scalloped']::after {
+    border-inline-width: 0;
+  }
+
+  .badge[data-size='sm'] {
+    --_height: 1.25rem;
+
+    font-size: var(--elven-font-size-sm);
+  }
+
+  /* Soft: a pale tint lettered in the tone's ink. */
+  .badge[data-variant='accent'] {
+    --_fill: var(--elven-color-accent-subtle);
+    --_ink: var(--elven-color-accent-text);
+  }
+
+  .badge[data-variant='success'] {
+    --_fill: var(--elven-color-success-subtle);
+    --_ink: var(--elven-color-success-text);
+  }
+
+  .badge[data-variant='warning'] {
+    --_fill: var(--elven-color-warning-subtle);
+    --_ink: var(--elven-color-warning-text);
+  }
+
+  .badge[data-variant='danger'] {
+    --_fill: var(--elven-color-danger-subtle);
+    --_ink: var(--elven-color-danger-text);
+  }
+
+  /*
+   * Solid: the full tone. Neutral has no tokens of its own: muted text and the
+   * surface are already a checked contrast pair, and contrast does not depend
+   * on which one is the fill.
+   */
+  .badge[data-appearance='solid'] {
+    --_fill: var(--elven-color-text-muted);
+    --_ink: var(--elven-color-surface);
+  }
+
+  .badge[data-appearance='solid'][data-variant='accent'] {
+    --_fill: var(--elven-color-accent);
+    --_ink: var(--elven-color-on-accent);
+  }
+
+  .badge[data-appearance='solid'][data-variant='success'] {
+    --_fill: var(--elven-color-success);
+    --_ink: var(--elven-color-on-success);
+  }
+
+  .badge[data-appearance='solid'][data-variant='warning'] {
+    --_fill: var(--elven-color-warning);
+    --_ink: var(--elven-color-on-warning);
+  }
+
+  .badge[data-appearance='solid'][data-variant='danger'] {
+    --_fill: var(--elven-color-danger);
+    --_ink: var(--elven-color-on-danger);
+  }
+
+  @media (forced-colors: active) {
+    /* Fills are dropped and a clipped border would lose its ends, so show a plain outline. */
+    .badge {
+      clip-path: none;
+      -webkit-mask: none;
+      mask: none;
+      border: 1px solid CanvasText;
+    }
+
+    .badge::before,
+    .badge::after {
+      display: none;
+    }
+  }
+}
