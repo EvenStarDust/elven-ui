@@ -45,6 +45,17 @@
     --elven-color-on-danger: var(--elven-ash-200);
     --elven-color-success: var(--elven-moss-700);
     --elven-color-on-success: var(--elven-sage-100);
+    /* Ochre rather than saffron, which would read as the rust accent */
+    --elven-color-warning: var(--elven-ochre-700);
+    --elven-color-on-warning: var(--elven-straw-200);
+    /* Soft fills for statuses, each with a text color that reads on it and on the surface */
+    --elven-color-neutral-subtle: var(--elven-parchment-200);
+    --elven-color-success-subtle: var(--elven-sage-100);
+    --elven-color-success-text: var(--elven-moss-800);
+    --elven-color-warning-subtle: var(--elven-straw-200);
+    --elven-color-warning-text: var(--elven-ochre-800);
+    --elven-color-danger-subtle: var(--elven-wax-100);
+    --elven-color-danger-text: var(--elven-blood-800);
   }
 
   [data-elven-theme='rivendell'] {
