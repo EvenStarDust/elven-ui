@@ -1,0 +1,132 @@
+@layer elven.components {
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--elven-space-4);
+  }
+
+  .stack[data-direction='row'] {
+    flex-direction: row;
+  }
+
+  .stack[data-wrap] {
+    flex-wrap: wrap;
+  }
+
+  .stack[data-gap='1'] {
+    gap: var(--elven-space-1);
+  }
+
+  .stack[data-gap='2'] {
+    gap: var(--elven-space-2);
+  }
+
+  .stack[data-gap='3'] {
+    gap: var(--elven-space-3);
+  }
+
+  .stack[data-gap='5'] {
+    gap: var(--elven-space-5);
+  }
+
+  .stack[data-gap='6'] {
+    gap: var(--elven-space-6);
+  }
+
+  .stack[data-gap='8'] {
+    gap: var(--elven-space-8);
+  }
+
+  .stack[data-align='start'] {
+    align-items: flex-start;
+  }
+
+  .stack[data-align='center'] {
+    align-items: center;
+  }
+
+  .stack[data-align='end'] {
+    align-items: flex-end;
+  }
+
+  .stack[data-align='baseline'] {
+    align-items: baseline;
+  }
+
+  .stack[data-justify='center'] {
+    justify-content: center;
+  }
+
+  .stack[data-justify='end'] {
+    justify-content: flex-end;
+  }
+
+  .stack[data-justify='between'] {
+    justify-content: space-between;
+  }
+
+  /*
+   * A gilt rule that fades out at both ends, with the Evenstar at its middle.
+   * Both are sized from the ornament width, so setting it to 0 removes them
+   * and leaves the plain gap. The rule and the star share one grid cell,
+   * which centers them without any physical offset, so RTL needs nothing.
+   */
+  .separator {
+    /* Its thin points vanish at small sizes, so the star is drawn larger than the rule is thick. */
+    --_star: calc(var(--elven-ornament-width) * 11);
+    --_fade: to right;
+
+    display: grid;
+    place-items: center;
+    flex: none;
+    align-self: stretch;
+    min-block-size: var(--_star);
+  }
+
+  .separator::before,
+  .separator::after {
+    content: '';
+    grid-area: 1 / 1;
+  }
+
+  .separator::before {
+    inline-size: 100%;
+    block-size: var(--elven-ornament-width);
+    background: linear-gradient(
+      var(--_fade),
+      transparent,
+      var(--elven-color-ornament) 25%,
+      var(--elven-color-ornament) 75%,
+      transparent
+    );
+  }
+
+  /* The EvenstarIcon outline (a 24 grid, points at 2.4 and 21.6), scaled to the box. */
+  .separator::after {
+    inline-size: var(--_star);
+    block-size: var(--_star);
+    background-color: var(--elven-color-ornament);
+    clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  }
+
+  .stack[data-direction='row'] > .separator {
+    --_fade: to bottom;
+
+    min-block-size: 0;
+    min-inline-size: var(--_star);
+  }
+
+  .stack[data-direction='row'] > .separator::before {
+    inline-size: var(--elven-ornament-width);
+    block-size: 100%;
+  }
+
+  @media (forced-colors: active) {
+    /* Gradients and fills are dropped, so draw the rule in the system text color. */
+    .separator::before,
+    .separator::after {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+  }
+}

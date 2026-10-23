@@ -183,6 +183,32 @@ counts and categories.
 Let the label say what it means on its own: the color only reinforces it.
 `--elven-ornament-width: 0` removes the gilt edge and the stitching.
 
+## Stack
+
+Lays out its children in a column or a row, spaced by a step of the spacing
+scale (`gap={4}` is `--elven-space-4`).
+
+```tsx
+<Stack gap={2}>…</Stack>
+<Stack direction="row" align="center" justify="between">…</Stack>
+<Stack separator>…</Stack>
+<Stack asChild gap={2}><ul>…</ul></Stack>
+```
+
+| Prop        | Values                                         | Default   |
+| ----------- | ---------------------------------------------- | --------- |
+| `direction` | `column` `row`                                 | `column`  |
+| `gap`       | `1` `2` `3` `4` `5` `6` `8`                    | `4`       |
+| `align`     | `start` `center` `end` `stretch` `baseline`    | `stretch` |
+| `justify`   | `start` `center` `end` `between`               | `start`   |
+| `wrap`      | `boolean`                                      | `false`   |
+| `separator` | `boolean`, a gilt rule with the Evenstar between the children | `false` |
+| `asChild`   | `boolean`, renders the child element (such as a list) as the stack | `false` |
+
+The separator is decorative and hidden from assistive technology, and
+`--elven-ornament-width: 0` removes it. It is not drawn with `asChild`, since
+the children then belong to the child element.
+
 ## Icons
 
 A set of 56 icons in the same old-world style: thin outlines that take the
