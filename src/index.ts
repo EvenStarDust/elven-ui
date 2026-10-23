@@ -26,6 +26,8 @@ export type {
 } from './components/Dialog'
 export { Input } from './components/Input'
 export type { InputFrame, InputLabelPlacement, InputProps, InputSize } from './components/Input'
+export { Stack } from './components/Stack'
+export type { StackAlign, StackDirection, StackGap, StackJustify, StackProps } from './components/Stack'
 export { TimePicker } from './components/TimePicker'
 export type { TimePickerLabels, TimePickerProps } from './components/TimePicker'
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './components/Tooltip'
